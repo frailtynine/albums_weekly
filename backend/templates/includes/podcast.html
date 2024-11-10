@@ -1,0 +1,35 @@
+{% load static %}
+<div class="row" style="margin-top: 3.75rem">
+  <div class="col-4">
+    <p class="small tag"><img src="{% static 'icons/headphones.png'%}">Подкаст</p>
+  </div>
+  <div class="col-4" style="padding-left: 1.25rem">
+    <p class="small date" >{{ object.pub_date|date:"d E Y"}}</p>
+  </div>
+  <div class="col-4">
+    <p class="text-end small tag-link"><a href="{% url 'podcast_list' %}">Все подкасты</a></p>
+  </div>
+</div>
+<div class="row align-items-start" style="margin-top: 2.5rem">
+  <div class="col-12 col-md-4">
+    <h2 class="text-start" ><a href="{% url 'podcast_detail' object.id %}" class="text-decoration-none text-reset">{{ object.title }}</a></h2>
+  </div>
+  <div class="col-12 col-md-8">
+    <div data-youtube-video style="margin-bottom: 1.25rem">
+      <iframe
+        width="548"
+        height="331"
+        allowfullscreen="true"
+        autoplay="false"
+        disablekbcontrols="false"
+        endtime="0"
+        ivloadpolicy="0"
+        loop="false"
+        modestbranding="false"
+        src="https://www.youtube-nocookie.com/embed/{{ object.yt_id }}"
+      >
+      </iframe>
+    </div>
+    <p>{{ object.text }}</p>
+  </div>
+</div>

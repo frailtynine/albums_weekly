@@ -1,0 +1,31 @@
+{% load static %}
+<div class="rounded-5 bg-white" style="margin-bottom: 1.25rem; padding-bottom: 3.75rem">
+<div class="row">
+<div class="col-1"></div>
+<div class="col-10">
+  <div class="row" style="margin-top: 3.75rem">
+    <div class="col-4">
+      <p class="text-start small tag"><img src="{% static 'icons/music_note.png'%}">Альбомы</p>
+    </div>
+    <div class="col-4" style="padding-left: 1.25rem">
+      <p class="text-start small date">{{ object.pub_date|date:"d E Y"}}</p>
+    </div>
+    <div class="col-4">
+      <p class="text-end small text-muted tag-link"><a href="{% url 'album_list' %}">Все альбомы</a></p>
+    </div>
+  </div>
+  <div class="row align-items-start" style="margin-top: 2.5rem">
+    <div class="col-12 col-md-4">
+      <h2 class="text-start" >{{ object.title }}</h2>
+    </div>
+    <div class="col-12 col-md-8" style="padding-left: 1.25rem">
+      {{ object.text|safe }}
+    </div>
+  </div>
+  {% for object in object.albums.all %}
+    {% include "includes/album.html" %}
+  {% endfor %}
+</div>
+<div class="col-1"></div>
+</div>
+</div>

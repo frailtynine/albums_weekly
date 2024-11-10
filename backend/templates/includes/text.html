@@ -1,0 +1,42 @@
+{% load custom_filters %}
+{% with view_name=request.resolver_match.view_name  %}
+{% load static %}
+
+  <div class="row" style="margin-top: 3.75rem">
+    <div class="col-4">
+      <p class="text-start small text-muted tag"><img src="{% static 'icons/fire.png'%}">Тейки</p>
+    </div>
+    <div class="col-4" style="padding-left: 1.25rem">
+      <p class="text-start small text-muted date" >{{ object.pub_date|date:"d E Y"}}</p>
+    </div>
+    <div class="col-4">
+      <p class="text-end small text-muted tag-link"><a href="{% url 'text_list' %}">Все тейки</a></p>
+    </div>
+  </div>
+  <div class="row align-items-start" style="margin-top: 2.5rem">
+    <div class="col-12 col-md-4 mx-auto mx-md-0 mb-3 mb-md-0">
+      {% if view_name != 'text_detail' %}
+      <a href="{% url 'text_detail' object.id %}" class="text-decoration-none text-reset">
+        <h2 class="text-start" >{{ object.title }}</h2>
+      </a>
+      {% else %}
+        <h2 class="text-start" >{{ object.title }}</h2>
+      {% endif %}
+    </div>
+    <div class="col-12 col-md-8" style="padding-left: 1.25rem">
+      {% if view_name != 'text_detail' %}
+        {{ object.content|safe|truncatewords_html:60 }}
+        <div class="row" style="margin-top: 0.25rem">
+          <div class="col d-flex">
+            <a href="{% url 'text_detail' object.id %}" class="d-flex text-decoration-none text-reset align-items-center">
+              <img src="{% static 'icons/campaign.png' %}" style="margin-right: 0.25rem;">
+              <h6 class="link" style="margin: 0; cursor: pointer; color: #8E37FF">Читать полностью</h6>
+            </a>
+          </div>
+        </div>
+      {% else %}
+        {{ object.content|safe }}
+      {% endif %}
+    </div>
+  </div>
+{% endwith %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Альбомы{% endblock %}
+{% block content %}
+{% for object in object_list %}
+  <div class="rounded-5 bg-white" style="margin-bottom: 1.25rem; padding-bottom: 2.5rem">
+  <div class="row">
+    <div class="col-1"></div>
+    <div class="col-10">
+      {% include "includes/album.html" %}
+    </div>
+    <div class="col-1"></div>
+  </div>
+  </div>
+{% endfor %}
+{% include "includes/pagination.html" %}
+{% endblock %}

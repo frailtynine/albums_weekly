@@ -1,0 +1,129 @@
+{
+"albums_post": [
+	{
+		"id" : 1,
+		"title" : "adfaf",
+		"pub_date" : "2024-06-26",
+		"is_published" : 1
+	},
+	{
+		"id" : 2,
+		"title" : "asdfgagfsasd",
+		"pub_date" : "2024-06-26",
+		"is_published" : 1
+	},
+	{
+		"id" : 3,
+		"title" : "asd afdfdssadfa",
+		"pub_date" : "2024-06-26",
+		"is_published" : 1
+	},
+	{
+		"id" : 7,
+		"title" : "Мрак, поэзия и Джasdонни Кэш из альтернативной вселеsdнной 1",
+		"pub_date" : "2024-06-28",
+		"is_published" : 1
+	},
+	{
+		"id" : 8,
+		"title" : "фыафы",
+		"pub_date" : "2024-06-28",
+		"is_published" : 1
+	},
+	{
+		"id" : 11,
+		"title" : "dasfaggfgafgafg",
+		"pub_date" : "2024-06-29",
+		"is_published" : 1
+	},
+	{
+		"id" : 12,
+		"title" : "aadsf",
+		"pub_date" : "2024-06-29",
+		"is_published" : 1
+	},
+	{
+		"id" : 13,
+		"title" : "aadsffaf",
+		"pub_date" : "2024-06-29",
+		"is_published" : 1
+	},
+	{
+		"id" : 14,
+		"title" : "aadsffafdf",
+		"pub_date" : "2024-06-29",
+		"is_published" : 1
+	},
+	{
+		"id" : 16,
+		"title" : "Эмо о жизни, исландский даунтемпо и ретро-рок от Салуки",
+		"pub_date" : "2024-07-05",
+		"is_published" : 1
+	},
+	{
+		"id" : 17,
+		"title" : "Тихие женщины, смешной Эминем",
+		"pub_date" : "2024-07-12",
+		"is_published" : 0
+	},
+	{
+		"id" : 18,
+		"title" : "Тихие  женщины, смешной Эминем",
+		"pub_date" : "2024-07-12",
+		"is_published" : 0
+	},
+	{
+		"id" : 19,
+		"title" : "Тихие   женщины, смешной Эминем",
+		"pub_date" : "2024-07-12",
+		"is_published" : 0
+	},
+	{
+		"id" : 20,
+		"title" : "Тихие    женщины, смешной Эминем",
+		"pub_date" : "2024-07-12",
+		"is_published" : 0
+	},
+	{
+		"id" : 21,
+		"title" : "Тихие     женщины, смешной Эминем",
+		"pub_date" : "2024-07-12",
+		"is_published" : 0
+	},
+	{
+		"id" : 22,
+		"title" : "string",
+		"pub_date" : "2024-07-13",
+		"is_published" : 1
+	},
+	{
+		"id" : 23,
+		"title" : "заголовок для теста",
+		"pub_date" : "2024-07-13",
+		"is_published" : 1
+	},
+	{
+		"id" : 24,
+		"title" : "Инди-легенды, Дональд Гловер и Ахматова в прочтении КДИМБ",
+		"pub_date" : "2024-07-19",
+		"is_published" : 1
+	},
+	{
+		"id" : 25,
+		"title" : "Джек Уайт, звезда гиперпопа, пост-панк о животной природе человека",
+		"pub_date" : "2024-07-26",
+		"is_published" : 1
+	},
+	{
+		"id" : 26,
+		"title" : "Эскпериментальный и неэкспериментальный рэп, Билли Корган, Дэвид Линч",
+		"pub_date" : "2024-08-02",
+		"is_published" : 1
+	},
+	{
+		"id" : 27,
+		"title" : "Панк-пятница и Луна на русском",
+		"pub_date" : "2024-08-09",
+		"is_published" : 1
+	}
+]}

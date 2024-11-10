@@ -1,0 +1,61 @@
+{% load static %}
+{% with view_name=request.resolver_match.view_name  %}
+<div class="row" style="margin-top: 3.75rem">
+  <div class="col-12 col-md-4 text-center text-md-start">
+    <img 
+      src="{{ MEDIA_URL }}{{ object.image_url }}" 
+      class="img-fluid rounded-4 mx-auto mx-md-0 mb-3 mb-md-0" 
+      alt="Album art: {{ object.band_name }} —  {{ object.album_name }}"
+      style="width: 272px;"
+    >
+  </div>
+  <div class="col-12 col-md-8" style="padding-left: 1.25rem">
+    <a href="{% url 'album_detail' object.id %}" class="text-decoration-none text-reset"><h5 style="padding-bottom: 0.75rem">{{ object.band_name }} —  {{ object.album_name }} </h5></a>
+    <p>{{ object.text }}</p>
+    <div class="row" style="margin-top: 0.25rem">
+      <div class="col d-flex align-items-center">
+        <button id="playButton-{{ object.id }}" class="d-flex align-items-center" style="border: none; background: none; padding: 0;" onclick="toggleLinks({{ object.id }})">
+          <img src="{% static 'icons/play_circle.png' %}" style="margin-right: 0.25rem;">
+          <h6 class="link" style="margin: 0; cursor: pointer;">Слушать</h6>
+        </button>
+    
+        <div id="links-{{ object.id }}" style="display: none; height: 1.5rem">
+          {% if object.links.spotify %}
+            <a href="{{object.links.spotify.url}}" class="text-decoration-none">
+              <p class="small" style="margin-right: 1.25rem">Spotify</p>
+            </a>
+          {% endif %}
+          {% if object.links.bandcamp %}
+            <a href="{{object.links.bandcamp.url}}" class="text-decoration-none">
+              <p class="small" style="margin-right: 1.25rem">Bandcamp</p>
+            </a>
+          {% endif %}
+          {% if object.links.appleMusic %}
+            <a href="{{object.links.appleMusic.url}}" class="text-decoration-none">
+              <p class="small" style="margin-right: 1.25rem">Apple Music</p>
+            </a>
+          {% endif %}
+          {% if object.links.youtubeMusic %}
+            <a href="{{object.links.youtubeMusic.url}}" class="text-decoration-none">
+              <p class="small" style="margin-right: 1.25rem">Youtube Music</p>
+            </a>
+          {% endif %}
+          {% if object.links.yandex %}
+            <a href="{{object.links.yandex.url}}" class="text-decoration-none">
+              <p class="small" style="margin-right: 1.25rem">Яндекс.Музыка</p>
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    
+    <script>
+      function toggleLinks(id) {
+        const linksDiv = document.getElementById(`links-${id}`);
+        linksDiv.style.display = 'flex';
+        document.getElementById(`playButton-${id}`).style.setProperty('display', 'none', 'important');
+      }
+    </script>
+  </div>
+</div>
+{% endwith %}

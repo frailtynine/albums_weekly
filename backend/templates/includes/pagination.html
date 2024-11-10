@@ -1,0 +1,48 @@
+{% load static %}
+<div class="rounded-5 bg-white" style="margin-bottom: 1.25rem; padding-bottom: 2.75rem; padding-top: 2.75rem">
+    <div style="display: flex; justify-content: center; align-items: center;">
+        {% if page_obj.has_previous %}
+            <div style="margin-right: 2.5rem; display: flex; align-items: center;">
+                <a href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                    <img src="{% static 'icons/west.png' %}" alt="Previous">
+                </a>
+            </div>
+        {% else %}
+            <div style="margin-right: 2.5rem; visibility: hidden; display: flex; align-items: center;">
+                <a href="#" aria-label="Previous">
+                    <img src="{% static 'icons/west.png' %}" alt="Previous">
+                </a>
+            </div>
+        {% endif %}
+
+        {% for num in paginator.page_range %}
+            {% if page_obj.number == num %}
+                <div style="margin-right: 2.5rem; display: flex; align-items: center;"> 
+                    <a href="#">
+                        <h6 class="pagination-active" style="margin: 0;">{{ num }}</h6>
+                    </a>
+                </div>
+            {% elif num > page_obj.number|add:-3 and num < page_obj.number|add:3 %}
+                <div style="margin-right: 2.5rem; display: flex; align-items: center;">
+                    <a href="?page={{ num }}">
+                        <h6 class="pagination-number" style="margin: 0;">{{ num }}</h6>
+                    </a>
+                </div>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <div style="display: flex; align-items: center;">
+                <a href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                    <img src="{% static 'icons/east.png' %}" alt="Next">
+                </a>
+            </div>
+        {% else %}
+            <div style="visibility: hidden; display: flex; align-items: center;">
+                <a href="#" aria-label="Next">
+                    <img src="{% static 'icons/east.png' %}" alt="Next">
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>

@@ -1,0 +1,28 @@
+<nav class="navbar navbar-expand-sm navbar-light rounded-5 rounded-top-0" style="height: 96px; background-color: #FFFFFF">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+      <ul class="navbar-nav">
+        {% with view_name=request.resolver_match.view_name  %}
+        <li class="nav-item">
+          <a class="nav-link {% if view_name == 'index' %}active{% endif %}" aria-current="page" href="{% url 'index' %}"><h6>Главная</h6></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if view_name == 'album_list' %}active{% endif %}" href="{% url 'album_list' %}"><h6>Альбомы</h6></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if view_name == 'podcast_list' %}active{% endif %}" href="{% url 'podcast_list' %}"><h6>Подкасты</h6></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if view_name == 'text_list' %}active{% endif %}" href="{% url 'text_list' %}"><h6>Тейки</h6></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link fs-6" href="#"><h6>О фэнзине</h6></a>
+        </li>
+        {% endwith %}
+      </ul>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+{% block title %}Текст №{{ object.id }}{% endblock %}
+{% block content %}
+<div class="rounded-5 bg-white" style="margin-bottom: 1.25rem; padding-bottom: 3.75rem">
+  <div class="row">
+  <div class="col-1"></div>
+  <div class="col-10">
+  {% include "includes/text.html" %}
+  </div>
+  <div class="col-1"></div>
+  </div>
+</div>
+{% endblock  %}

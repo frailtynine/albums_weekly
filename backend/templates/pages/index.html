@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+{% block title %}Альбомы по пятницам{% endblock%}
+{% block content %}
+  {% for object in object_list %}
+    {% if object|class_name == 'Post' %}
+      {% include "includes/post.html" %}
+    {% endif %}
+    {% if object|class_name == 'Podcast' %}
+    <div class="rounded-5 bg-white" style="margin-bottom: 1.25rem; padding-bottom: 3.75rem">
+      <div class="row">
+      <div class="col"></div>
+      <div class="col-10">
+      {% include "includes/podcast.html" %}
+      </div>
+      <div class="col"></div>
+      </div>
+    </div>
+    {% endif %}
+    {% if object|class_name == 'Text' %}
+    <div class="rounded-5 bg-white" style="margin-bottom: 1.25rem; padding-bottom: 3.75rem">
+      <div class="row">
+      <div class="col"></div>
+      <div class="col-10">
+      {% include "includes/text.html" %}
+      </div>
+      <div class="col"></div>
+      </div>
+    </div>
+    {% endif %}
+  {% endfor %}
+{% include "includes/pagination.html" %}
+{% endblock %}
