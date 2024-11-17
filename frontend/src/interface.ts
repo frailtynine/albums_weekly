@@ -14,6 +14,7 @@ export interface AlbumResponse extends AlbumCreateRequest {
   id: number;
   is_published: boolean;
   pub_date: string;
+  views: number;
 }
 
 export interface AlbumRequest extends AlbumCreateRequest {
@@ -61,6 +62,7 @@ export interface PostResponce {
   telegram_content: string;
   substack_content: string;
   text: string;
+  views: number;
 }
 
 export interface PostByDateResponse {
@@ -75,6 +77,7 @@ export interface PostData {
   title: string;
   album_ids: number[];
   text: string;
+  is_published: boolean;
 }
 
 export interface TelegramText {

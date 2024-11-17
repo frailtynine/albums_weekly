@@ -40,7 +40,10 @@ export default function ClippedDrawer() {
 
   useEffect(() => {
         verifyToken()
-        .then(() => {setLoading(false)} 
+        .then(() => {
+          handleComponentChange(MainTable);
+          setLoading(false);
+        } 
         )
         .catch(error => {
           console.error(error)

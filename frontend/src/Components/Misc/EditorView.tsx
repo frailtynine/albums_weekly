@@ -13,10 +13,14 @@ interface EditorProps {
   setTextValue: (value: string) => void;
   charLimit?: number;
   youtube?: boolean;
+  width?: string;
+  height?: string;
 }
 
 
-export default function TipTapEditor ({textValue, setTextValue, charLimit = 4000, youtube = false}: EditorProps) {
+export default function TipTapEditor ({
+  textValue, setTextValue, charLimit = 4000, youtube = false, width='auto', height='auto'
+}: EditorProps) {
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -97,7 +101,9 @@ export default function TipTapEditor ({textValue, setTextValue, charLimit = 4000
       <Box
         sx={{
           textAlign: 'left',
-          minHeight: '200px',  
+          minHeight: '200px',
+          height: height,
+          width: width,  
           border: '1px solid #ccc',  
           borderRadius: '8px',  
           padding: '16px',  

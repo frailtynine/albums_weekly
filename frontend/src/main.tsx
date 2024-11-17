@@ -7,7 +7,7 @@ import { ComponentProvider } from './Components/Misc/Context.tsx'
 createRoot(document.getElementById('root')!).render(
     <ComponentProvider>
   <StrictMode>
-    <App />
-  </StrictMode>,
+      <App />
+  </StrictMode>
     </ComponentProvider>
 )

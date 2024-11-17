@@ -2,7 +2,11 @@ from datetime import datetime
 from typing import Dict, Optional
 
 from ninja import Schema
-from pydantic import field_validator, ValidationError
+from pydantic import field_validator
+
+
+class ViewCount(Schema):
+    count: int
 
 
 class AlbumSchema(Schema):
@@ -16,6 +20,7 @@ class AlbumSchema(Schema):
     links: Dict[str, Dict[str, str]]
     is_published: bool
     pub_date: datetime
+    views: Optional[int] = 0
 
 
 class AlbumCreateSchema(Schema):
@@ -42,12 +47,15 @@ class PostSchema(Schema):
     is_published: bool
     telegram_content: Optional[str] = None
     substack_content: Optional[str] = None
+    text: Optional[str] = None
+    views: Optional[int] = 0
 
 
 class PostCreateSchema(Schema):
     title: str
     album_ids: list[int]
     text: str
+    is_published: bool
 
 
 class PostByDateSchema(Schema):

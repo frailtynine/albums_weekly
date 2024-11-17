@@ -10,6 +10,7 @@ from api.schemas import TextCreateSchema, TextSchema
 
 logger = logging.getLogger(__name__)
 
+
 @api_controller('/texts', auth=JWTAuth(), permissions=[IsAdminUser])
 class TextController:
 

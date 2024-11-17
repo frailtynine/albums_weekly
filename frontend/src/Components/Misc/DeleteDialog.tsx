@@ -18,7 +18,7 @@ interface DeleteDialogProps {
   handleRefresh?: () => void;
 }
 
-export default function DeleteDialog({text, openDeleteDialog, endpoint, id, isOpen, handleRefresh}: DeleteDialogProps) {
+export default function DeleteDialog({openDeleteDialog, endpoint, id, isOpen, handleRefresh}: DeleteDialogProps) {
   const [open, setOpen] = React.useState(isOpen);
 
   React.useEffect(() => {
@@ -46,7 +46,7 @@ export default function DeleteDialog({text, openDeleteDialog, endpoint, id, isOp
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {"Delete album?"}
+          {"Delete entity?"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">

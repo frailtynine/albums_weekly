@@ -167,7 +167,7 @@ wenv/
 static/
 logs/
 media/
-backend/api/media/
+backend/media/
 
 #SSL certificates
 *.pem

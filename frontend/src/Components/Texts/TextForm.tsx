@@ -16,7 +16,7 @@ interface SavedText {
 }
 
 
-export default function TextForm ({elementId, onClose}: TextFormProps) {
+export default function TextForm ({elementId}: TextFormProps) {
   const { setCurrentComponent } = useComponent();
   const [textData, setTextData] = useState<TextRequest>({
     title: '',
@@ -76,7 +76,7 @@ export default function TextForm ({elementId, onClose}: TextFormProps) {
   
 
   return (
-    <Box>
+    <Box sx={{ height: '80vh', width: '100%', display: 'flex', flexDirection: 'column' }}>
       <TextField
         id="outlined-basic"
         fullWidth
@@ -86,12 +86,17 @@ export default function TextForm ({elementId, onClose}: TextFormProps) {
         onChange={(e) => handleFieldChange('title', e.target.value)}
         sx={{ marginBottom: '5px'}}
       />
+
+      <Box sx={{ flex: 1, overflowY: 'auto' }}>
       <TipTapEditor
         textValue={textData?.content || ''}
         setTextValue={(value) => handleFieldChange('content', value)}
         charLimit={8000}
         youtube={true}
+        width="40vw"
+        height="65vh"
       />
+      </Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', margin: '5px' }}>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Checkbox

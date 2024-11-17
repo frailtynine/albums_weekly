@@ -1,12 +1,10 @@
 import os
 import logging
 import zipfile
-from collections import defaultdict
-from typing import Union
 import asyncio
 
 from django.shortcuts import get_object_or_404
-from django.db.models import Prefetch
+from django.db.models import Prefetch, Sum
 from django.http import HttpResponse, JsonResponse
 from django.conf import settings
 from ninja_extra import api_controller, route
@@ -18,7 +16,6 @@ from telegram.error import BadRequest as TelegramBadRequest
 from api.models import Post, Album
 from api.schemas import (
     PostSchema,
-    PostByDateSchema,
     PostCreateSchema,
     TelegramText
 )
@@ -38,13 +35,11 @@ class PostController:
         self,
         request,
         item: PostCreateSchema,
-        publish: bool = False
     ):
         payload = item.dict()
-        print(payload)
         post = Post.objects.create(
             title=payload['title'],
-            text=payload['text']
+            text=payload['text'],
         )
         albums = []
         for index in range(len(payload['album_ids'])):
@@ -53,7 +48,7 @@ class PostController:
             album.index = index
             albums.append(album)
             album.save()
-        if publish:
+        if payload['is_published']:
             post.is_published = True
             for album in albums:
                 album.is_published = True
@@ -66,31 +61,27 @@ class PostController:
     @route.post('/send_to_telegram')
     def send_to_telegram(self, request, payload: TelegramText):
         bot = Bot(message=convert_to_markdown(payload.text))
-        print(payload.text)
-        print(convert_to_markdown(payload.text))
         try:
             asyncio.run(bot.send_message())
             return JsonResponse({'status': 'success'}, status=200)
         except TelegramBadRequest as e:
             raise HttpError(400, e.message)
 
-
-    @route.get('/', response=Union[list[PostSchema], PostSchema])
-    def get_posts(self, request, latest: bool = False):
+    @route.get('/', response=list[PostSchema])
+    def get_posts(self, request):
         posts = Post.objects.all().prefetch_related(
             Prefetch(
                 'albums',
                 queryset=Album.objects.order_by('index')
             ),
             Prefetch('view_count')
-        ).order_by('id')
-        for post_post in posts:
-            post_post.telegram_content = compose_telegram(post_post)
-            post_post.substack_content = compose_substack(post_post)
-            post_post.save()
-        if latest:
-            post = posts.last()
-            return post
+        ).annotate(views=Sum('view_count__count')).order_by('id')
+
+        # left for testing purposes
+        # for post_post in posts:
+        #     post_post.telegram_content = compose_telegram(post_post)
+        #     post_post.substack_content = compose_substack(post_post)
+        #     post_post.save()
         return posts
 
     @route.get('/{id}', response=PostSchema)
@@ -99,8 +90,38 @@ class PostController:
             Prefetch(
                 'albums',
                 queryset=Album.objects.order_by('index')
-            )
+            ),
         ).get()
+        return post
+
+    @route.put('/{id}', response=PostSchema)
+    def update_post(self, request, id: int, item: PostCreateSchema):
+        payload = item.dict()
+        post = get_object_or_404(
+            Post.objects.prefetch_related('albums'),
+            pk=id
+        )
+        post.title = payload['title']
+        post.text = payload['text']
+        albums = []
+        for index in range(len(payload['album_ids'])):
+            album = get_object_or_404(Album, pk=payload['album_ids'][index])
+            album.post = post
+            album.index = index
+            albums.append(album)
+            album.save()
+        deleted_albums = post.albums.exclude(id__in=payload['album_ids'])
+        deleted_albums.update(post=None, index=None, is_published=False)
+        if payload['is_published']:
+            post.is_published = True
+            for album in albums:
+                album.is_published = True
+                album.save()
+            post.telegram_content = compose_telegram(post)
+            post.substack_content = compose_substack(post)
+            post.save()
+        post.is_published = payload['is_published']
+        post.save()
         return post
 
     @route.delete('/{id}')

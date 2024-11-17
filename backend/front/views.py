@@ -31,6 +31,8 @@ class IndexView(ListView):
         )
         for post in posts:
             increase_counter(post, PostViewCount)
+            for album in post.albums.all():
+                increase_counter(album, AlbumViewCount)
         podcasts = Podcast.objects.filter(is_published=True)
         texts = Text.objects.filter(is_published=True)
 
@@ -54,7 +56,7 @@ class PodcastListView(ListView):
     model = Podcast
     queryset = Podcast.objects.filter(
         is_published=True
-    )
+    ).order_by('-pub_date')
     template_name = 'pages/podcast_list.html'
     paginate_by = PAGINATE_ALBUMS
 
@@ -65,7 +67,7 @@ class AlbumDetailView(DetailView):
         is_published=True,
     )
     template_name = 'pages/album_detail.html'
-        
+
     def get_object(self, ):
         object = super().get_object(self.get_queryset())
         increase_counter(object, AlbumViewCount)
@@ -76,7 +78,7 @@ class AlbumListView(ListView):
     model = Album
     queryset = Album.objects.filter(
         is_published=True,
-    ).order_by('pub_date')
+    ).order_by('-pub_date')
     template_name = 'pages/album_list.html'
     paginate_by = PAGINATE_ALBUMS
 
@@ -93,7 +95,7 @@ class TextListView(ListView):
     model = Text
     queryset = Text.objects.filter(
         is_published=True,
-    )
+    ).order_by('-pub_date')
     template_name = 'pages/text_list.html'
     paginate_by = PAGINATE_ALBUMS
 

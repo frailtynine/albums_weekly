@@ -1,6 +1,7 @@
 import logging
 
 from django.shortcuts import get_object_or_404
+from django.db.models import Sum
 from ninja.errors import HttpError
 from ninja_extra import api_controller, route
 from ninja_jwt.authentication import JWTAuth
@@ -37,7 +38,9 @@ class AlbumController:
         '', response=list[AlbumSchema]
     )
     def get_albums(self, request):
-        albums = Album.objects.all().order_by('-pub_date')
+        albums = Album.objects.all().prefetch_related(
+            'view_count'
+        ).annotate(views=Sum('view_count__count')).order_by('-pub_date')
         return albums
 
     @route.get('/{id}', response=AlbumSchema)

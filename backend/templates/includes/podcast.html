@@ -1,4 +1,5 @@
 {% load static %}
+{% with view_name=request.resolver_match.view_name  %}
 <div class="row" style="margin-top: 3.75rem">
   <div class="col-4">
     <p class="small tag"><img src="{% static 'icons/headphones.png'%}">Подкаст</p>
@@ -30,6 +31,11 @@
       >
       </iframe>
     </div>
-    <p>{{ object.text }}</p>
+    {% if view_name != 'podcast_detail' %}
+    <p>{{ object.text|safe|truncatewords_html:50 }}</p>
+    {% else %}
+    <p>{{ object.text|safe }}</p>
+    {% endif %}
   </div>
 </div>
+{% endwith %}
