@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, ReactNode, ReactElement } from 'react';
-import MainTable from './MainTable';
 
 interface ComponentContextProps {
   currentComponent: ReactElement | null;
@@ -9,7 +8,7 @@ interface ComponentContextProps {
 const ComponentContext = createContext<ComponentContextProps | undefined>(undefined);
 
 export const ComponentProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [currentComponent, setCurrentComponent] = useState<ReactElement | null>(<MainTable />);
+  const [currentComponent, setCurrentComponent] = useState<ReactElement | null>(null);
 
   return (
     <ComponentContext.Provider value={{ currentComponent, setCurrentComponent }}>

@@ -1,7 +1,7 @@
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { fetchModels } from "../../api";
-import { PostResponce, AlbumResponse, TextResponse } from "../../interface";
+import { PostResponce, AlbumResponse, TextResponse, PodcastResponse } from "../../interface";
 import NewspaperIcon from '@mui/icons-material/Newspaper';
 import AlbumIcon from '@mui/icons-material/Album';
 import { SvgIconComponent } from "@mui/icons-material";
@@ -14,6 +14,10 @@ import DeleteDialog from "./DeleteDialog";
 import DeleteIcon from '@mui/icons-material/Delete';
 import TelegramPost from "../Posts/TelegramPost";
 import PostAddIcon from '@mui/icons-material/PostAdd';
+import { Podcasts } from '@mui/icons-material';
+import SubstackButton from "./SubstackButton";
+import PodcastForm from "../Podcasts/PodcastForm";
+
 
 
 interface IconMapInterface {
@@ -25,6 +29,7 @@ export default function MainTable() {
     posts: NewspaperIcon,
     albums: AlbumIcon,
     texts: PostAddIcon,
+    podcasts: Podcasts
   };
   const [rows, setRows] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -62,26 +67,61 @@ export default function MainTable() {
         )
       }
     },
-    {field: 'date', headerName: 'Date', width: 120},
+    {
+      field: 'date',
+      type: 'dateTime',
+      headerName: 'Date',
+      width: 120,
+      valueGetter: (value) => new Date(value),
+      valueFormatter: (value: Date) => {
+        return value.toLocaleDateString('ru-ru', { year: 'numeric', month: 'short', day: 'numeric' })
+      }
+      
+    },
     {field: 'is_published', headerName: 'Published', width: 90},
     {
       field: 'tg',
       headerName: 'Telegram',
+      sortable: false,
       width: 120,
       renderCell: (params) => {
-        if (params.row.type === 'posts') {
+        if (params.row.type === 'posts' || params.row.type === 'podcasts') {
           return (
-            <Button variant='contained' onClick={() => setCurrentComponent(<TelegramPost elementId={params.row.title.elementId} />)}>
+            <Button 
+              style={{ width: '100px' }}
+              variant='contained'
+              onClick={() => setCurrentComponent(
+                <TelegramPost elementId={params.row.title.elementId} endpoint={params.row.type}/>
+              )}
+            >
               Post
             </Button>
           )
         }
       }
     },
-    {field: 'substack', headerName: 'Substack', width: 120},
+    {
+      field: 'substack',
+      headerName: 'Substack',
+      sortable: false,
+      width: 120,
+      renderCell: (params) => {
+        if (params.row.type === 'posts' || params.row.type === 'texts' || params.row.type === 'podcasts') {
+            return (
+            <SubstackButton type={params.row.type} dataToCopy={params.value} openSubstack={params.row.type !== 'texts'} />
+            )
+        }  
+      }
+    },
+    {
+      field: 'views',
+      headerName: 'Views',
+      width: 90,
+    },
     {
       field: 'delete',
       headerName: 'Delete',
+      sortable: false,
       width: 120,
       renderCell: (params) => {
         return (
@@ -109,6 +149,8 @@ export default function MainTable() {
           date: post.pub_date,
           is_published: post.is_published ? 'Yes' : 'No',
           delete: post.id,
+          substack: post.substack_content,
+          views: post.views,
         }));
 
         const albums = await fetchModels('albums');
@@ -118,6 +160,7 @@ export default function MainTable() {
           title: {title: album.band_name, elementId: album.id, component: AlbumCreateForm},
           date: album.pub_date,
           is_published: album.is_published ? 'Yes' : 'No',
+          views: album.views,
         }));
 
         const texts = await fetchModels('texts');
@@ -127,9 +170,21 @@ export default function MainTable() {
           title: {title: text.title, elementId: text.id, component: TextForm},
           date: text.pub_date,
           is_published: text.is_published ? 'Yes' : 'No',
+          substack: text.content,
         }));
 
-        setRows([...postRows, ...albumRows, ...textRows]);
+        const podcasts = await fetchModels('podcasts');
+        const podcastRows = podcasts.map((podcast: PodcastResponse) => ({
+          id: `${podcast.id}-podcast`,
+          type: 'podcasts',
+          title: {title: podcast.title, elementId: podcast.id, component: PodcastForm},
+          date: podcast.pub_date,
+          is_published: podcast.is_published ? 'Yes' : 'No',
+          delete: podcast.id,
+          substack: `${podcast.title}  \n ${podcast.text} \n https://www.youtube.com/watch?v=${podcast.yt_id}`,
+        }));
+
+        setRows([...postRows, ...albumRows, ...textRows, ...podcastRows]);
 
       } catch (error) {
         console.error('Failed to fetch data:', error);
@@ -149,8 +204,10 @@ export default function MainTable() {
   }
 
   return (
-    <Box sx={{ width: '100%', height: '80vh' }}>
+    <Box sx={{ width: '100%', height: '80vh', display: 'flex', flexDirection: 'column'}}>
+      <Button sx={{ alignSelf: 'flex-end', mb: 2 }} variant='contained' onClick={() => setCurrentComponent(<TelegramPost />)}>Post to Telegram</Button>
       <DataGrid
+      sx={{ flex: '1', overflowY: 'auto'}}
       rows={rows}
       columns={columns}
       initialState={{
@@ -166,7 +223,6 @@ export default function MainTable() {
         },
       }}
       pageSizeOptions={[15]}
-      sx={{ overflowY: 'auto' }}
       />
       <DeleteDialog 
         endpoint={endpoint}

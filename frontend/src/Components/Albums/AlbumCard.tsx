@@ -7,19 +7,17 @@ import { BASE_URL } from '../../api';
 import AlbumCreateForm from './AlbumForm';
 import {useSortable} from '@dnd-kit/sortable';
 import {CSS} from '@dnd-kit/utilities';
-import DeleteDialog from '../Misc/DeleteDialog';
 
 
 interface AlbumCardProps {
   id: number;
   onEdit?: (Component: React.ElementType, props: {albumId: number}) => void;
   hideButtons?: boolean;
-  handleRefresh?: () => void;
+  onDelete?: (albumId: number) => void;
 }
 
 
-export default function AlbumCard({id, onEdit, hideButtons, handleRefresh}: AlbumCardProps) {
-  const [deleteDialog, setDeleteDialog] = useState<boolean>(false);
+export default function AlbumCard({id, onEdit, hideButtons, onDelete}: AlbumCardProps) {
   const [albumData, setAlbumData] = useState<AlbumResponse>();
   const [loading, setLoading] = useState<boolean>(true); 
   const {
@@ -46,9 +44,6 @@ export default function AlbumCard({id, onEdit, hideButtons, handleRefresh}: Albu
       });
   }, [id]);
 
-  const openDeleteDialog = (state: boolean) => {
-    setDeleteDialog(state);
-  }
 
   if (loading) {
     return (<CircularProgress />)
@@ -58,9 +53,6 @@ export default function AlbumCard({id, onEdit, hideButtons, handleRefresh}: Albu
     <Box sx={{ display: 'flex', flexDirection: 'row', maxWidth: 400, border: '1px solid', borderColor: 'divider', borderRadius: 1 }}
     ref={setNodeRef} style={style} {...attributes} {...listeners}
     >
-      <div>
-      {(deleteDialog && (<DeleteDialog text='' openDeleteDialog={openDeleteDialog} endpoint='albums' id={id} isOpen={deleteDialog} handleRefresh={handleRefresh}/>))}
-      </div>
       <Grid2 container alignItems='center'>
         <Grid2 size={3} padding={1}>
           <img
@@ -73,16 +65,20 @@ export default function AlbumCard({id, onEdit, hideButtons, handleRefresh}: Albu
           <Box>
             {(!hideButtons && (
             <Grid2 size={12} sx={{display: 'flex' ,justifyContent: 'flex-end'}}>
+            {onEdit && (
             <Tooltip title="Edit Album">
-              <IconButton size="small" onClick={() => onEdit?.(AlbumCreateForm, {albumId: id})}>
+              <IconButton size="small" onClick={() => onEdit(AlbumCreateForm, {albumId: id})}>
                 <Edit />
               </IconButton>
             </Tooltip>
+            )}
+            {onDelete && (
             <Tooltip title="Delete Album">
-              <IconButton size="small" onClick={() => setDeleteDialog(true)}>
+              <IconButton size="small" onMouseUp={() => onDelete(id)}>
                 <Delete />
               </IconButton>
             </Tooltip>
+            )}
            </Grid2>
           ))}
             <Grid2 size={12}>

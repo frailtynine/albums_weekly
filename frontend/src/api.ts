@@ -42,7 +42,6 @@ api.interceptors.response.use(
       } catch (error) {
         localStorage.removeItem('token');
         localStorage.removeItem('refreshToken');
-        // window.location.href = '/';
       }
     }
 
@@ -104,23 +103,19 @@ export async function deleteModel(endpoint: string ,id: number) {
 
 
 
-export async function getImages(id: number) {
+export async function getImages(id: number): Promise<any> {
   try {
-    const response = await api
-    .get<any>(`/posts/${id}/get_images`);
-    const imagesBlob = new Blob([response.data]);
-    const url = window.URL.createObjectURL(imagesBlob);
-    const tempLink = document.createElement('a');
-    tempLink.href = url;
-    tempLink.setAttribute('download', 'images.zip');
-    document.body.appendChild(tempLink);
-    tempLink.click();
-    document.body.removeChild(tempLink);
-    window.URL.revokeObjectURL(url);
+    const response = await api.get<any>(`/posts/${id}/get_images`, {responseType: 'blob'});
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    return url;
   }
   catch (error) { 
     console.error('Error downloading images:', error)
   }
+}
+
+export function revokeBlobUrl(url: string) {
+  window.URL.revokeObjectURL(url);
 }
 
 

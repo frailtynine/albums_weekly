@@ -1,6 +1,6 @@
 import { Box, Typography, Button, Alert } from "@mui/material";
-import { PostResponce, TelegramText, AlertInterface } from "../../interface";
-import { fetchModel, getImages, postModel } from "../../api";
+import { PostResponce, TelegramText, AlertInterface, PodcastResponse } from "../../interface";
+import { fetchModel, getImages, postModel, revokeBlobUrl } from "../../api";
 import { useState, useEffect } from "react";
 import AlbumChips from "../Albums/AlbumChips";
 import TipTapEditor from "../Misc/EditorView";
@@ -18,25 +18,47 @@ interface ErrorResponse {
 }
 
 interface TelegramPostProps {
-  elementId: number;
+  elementId?: number;
+  endpoint?: string
 }
 
-export default function TelegramPost ({elementId}: TelegramPostProps) {
+export default function TelegramPost ({elementId, endpoint }: TelegramPostProps) {
   const [post, setPost] = useState<PostResponce>();
+  const [podcast, setPodcast] = useState<PodcastResponse>();
   const [telegramText, setTelegramText] = useState<string>('');
   const [alert, setAlert] = useState<AlertInterface>();
   const { setCurrentComponent } = useComponent();
 
   useEffect(() => {
-    fetchModel('posts', elementId)
-    .then(post => {
-      setPost(post);
-    })
-    .catch(error => {
-      console.error(error)
-    })
+    if (elementId && endpoint) {
+      fetchModel(endpoint, elementId)
+      .then(data => {
+        if (endpoint === 'posts') {
+          setPost(data);
+        }
+        else if (endpoint === 'podcasts') {
+          setPodcast(data);
+        }
+      })
+      .catch(error => {
+        console.error(error)
+      })
+    }
   }, [])
 
+
+  const handleGetImages = async (postId: number) => {
+    const url = await getImages(postId);
+    if (url) {
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'generated_images.zip');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      revokeBlobUrl(url);
+    }
+  };
 
   const handlePostToTelegram = async () => {
     if (telegramText) {
@@ -58,23 +80,33 @@ export default function TelegramPost ({elementId}: TelegramPostProps) {
   return (
     <Box sx={{  display: 'flex' }}>
     <Box sx={{ flex: 3, overflowY: 'auto' }}>
-      {post && (
         <Box>
-          <Typography variant="h4" sx={{ padding:1 }}>{post.title}</Typography>
+            {endpoint === 'posts' && post && (
+            <Typography variant="h4" sx={{ padding:1 }}>{post.title}</Typography>
+            )}
           <Box sx={{ display: 'flex', gap: '16px' }}>
+            {endpoint === 'posts' && post && (
             <Box sx={{ flex: 1 }}>
               <AlbumChips albums={post.albums}/>
-                <Button onClick={() => getImages(post.id)} sx={{ flex: 1}}>Get Images</Button>
+
+          <Button variant="contained" onClick={() => handleGetImages(post.id)} sx={{ flex: 1}}>Get Images</Button>
             </Box>
+            )}
             <Box sx={{ flex: 3, overflowY: 'auto', height: '80vh'}}>
               {alert && (<Alert severity={alert.severity}>{alert.message}</Alert>)}
-              <TipTapEditor textValue={post.telegram_content} setTextValue={setTelegramText} charLimit={4000} key={post.id}/>
+              <TipTapEditor 
+              textValue={endpoint === 'podcasts' ? podcast?.text || '' : post?.telegram_content || ''} 
+              setTextValue={setTelegramText} 
+              charLimit={4000} 
+              key={post?.id || podcast?.id}
+              />
             </Box>
         </Box>
-            <Button variant='contained' onClick={() => handlePostToTelegram()}>Post to Telegram</Button>
-            <Button variant='contained' onClick={() => setCurrentComponent(<MainTable />)}>Cancel</Button>
+          <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, justifyContent: 'flex-end'}}>
+            <Button variant='contained' onClick={() => handlePostToTelegram()} sx={{ margin: '10px' }}>Post to Telegram</Button>
+            <Button variant='contained' onClick={() => setCurrentComponent(<MainTable />)} sx={{ margin: '10px' }}>Cancel</Button>
+          </Box>
         </Box>
-      )}
     </Box>
   </Box>
   );

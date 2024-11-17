@@ -1,19 +1,18 @@
 import { fetchModel, postModel, updateModel } from "../../api";
-import { PodcastRequest, PodcastResponse } from "../../interface";
+import { PodcastRequest } from "../../interface";
 import { useState, useEffect } from "react";
-import PodcastList from "./PodcastList";
 import TipTapEditor from "../Misc/EditorView";
 import axios from "axios";
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, TextField, Checkbox, Typography } from "@mui/material";
 import getYouTubeID from "get-youtube-id";
 import { useComponent } from "../Misc/Context";
 import MainTable from "../Misc/MainTable";
 
 interface PodcastFormProps {
-  podcastId?: number;
+  elementId?: number;
 }
 
-export default function PodcastForm ({podcastId}: PodcastFormProps) {
+export default function PodcastForm ({elementId}: PodcastFormProps) {
   const [podcastData, setPodcastData] = useState<PodcastRequest>({
     yt_id: '',
     title: '',
@@ -25,8 +24,8 @@ export default function PodcastForm ({podcastId}: PodcastFormProps) {
   const { setCurrentComponent } = useComponent();
 
   useEffect(() => {
-    if (podcastId) {
-      fetchModel('podcasts', podcastId)
+    if (elementId) {
+      fetchModel('podcasts', elementId)
       .then(fetchedPodcast => {
         setPodcastData(fetchedPodcast);
       })
@@ -36,12 +35,12 @@ export default function PodcastForm ({podcastId}: PodcastFormProps) {
 
   const handleSubmit = async () => {
     try {
-      if (podcastId) {
-        updateModel('podcasts', podcastId, podcastData);
+      if (elementId) {
+        updateModel('podcasts', elementId, podcastData);
         setCurrentComponent(<MainTable />);
       }
       else {
-        postModel('podcasts', podcastData);
+        postModel('podcasts/create', podcastData);
         setCurrentComponent(<MainTable />);
       }
     }
@@ -89,14 +88,36 @@ export default function PodcastForm ({podcastId}: PodcastFormProps) {
         label="YouTube URL"
         variant="outlined"
         helperText={youtubeError}
+        value={`https://www.youtube.com/watch?v=${podcastData.yt_id}`}
       />
-      <TipTapEditor
-        textValue={podcastData.text}
-        setTextValue={(text: string) => setPodcastData((prev) => ({...prev, text}))}
-        charLimit={4000}
-      />
-      <Button onClick={handleSubmit}>Submit</Button>
-      <Button onClick={() => setCurrentComponent(<MainTable />)}>Cancel</Button>
+      {podcastData.text && (
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <TextField
+            id="outlined-basic"
+            label="Title"
+            variant="outlined"
+            fullWidth
+            value={podcastData.title}
+            onChange={(e) => setPodcastData((prev) => ({...prev, title: e.target.value}))}
+          />
+          <TipTapEditor
+            textValue={podcastData.text}
+            setTextValue={(text: string) => setPodcastData((prev) => ({...prev, text}))}
+            charLimit={4000}
+          />
+        </Box>
+      )}
+      <Box>
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Checkbox 
+              checked={podcastData.is_published} 
+              onChange={(e) => setPodcastData((prev) => ({ ...prev, is_published: e.target.checked ? true : false }))} 
+              aria-label="Publish" 
+            />
+            <Typography variant="h6">Publish</Typography>
+            </Box>
+        <Button variant="contained" onClick={handleSubmit} sx={{ margin: '10px' }}>Submit</Button>
+        <Button variant="contained" onClick={() => setCurrentComponent(<MainTable />)}>Cancel</Button>      </Box>
     </Box>
   )
 }

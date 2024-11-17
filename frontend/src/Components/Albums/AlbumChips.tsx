@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AlbumResponse } from "../../interface";
-import { Box, Chip, List, ListItem, Popover } from "@mui/material";
+import { Box, Chip, Popover } from "@mui/material";
 import AlbumCard from "./AlbumCard";
 
 
@@ -28,11 +28,11 @@ export default function AlbumChips ({onClick, albums}: AlbumChipsProps) {
   
 
   return (
-      <Box sx={{width: '20vh'}}>
-        <List>
+      <Box>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
           {albums.map(album => (
-              <ListItem key={album.id}>
               <Chip
+                key={`${album.id}-chip`}
                 label={`${album.band_name} - ${album.album_name}`}
                 clickable
                 onMouseEnter={(event) => handlePopoverOpen(event, album.id)}
@@ -42,9 +42,8 @@ export default function AlbumChips ({onClick, albums}: AlbumChipsProps) {
                   handlePopoverClose();
                 }}
               />
-              </ListItem>
           ))}
-        </List>
+          </Box>
         <Popover
           sx={{
             pointerEvents: 'none',

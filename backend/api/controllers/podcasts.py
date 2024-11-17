@@ -1,22 +1,26 @@
 import logging
 
+from django.shortcuts import get_object_or_404
 from ninja_extra import api_controller, route
 from ninja_jwt.authentication import JWTAuth
 from ninja_extra.permissions import IsAdminUser
-from django.shortcuts import get_object_or_404
+from ninja.errors import HttpError
 
 from api.models import Podcast
 from api.schemas import PodcastSchema, PodcastCreateSchema
 
 logger = logging.getLogger(__name__)
 
+
 @api_controller('/podcasts', auth=JWTAuth(), permissions=[IsAdminUser])
 class PodcastController:
 
     @route.post('/create', response=PodcastSchema)
     def create_text(self, request, payload: PodcastCreateSchema):
-        text = Podcast.objects.create(**payload.dict())
-        return text
+        if not payload['text'] or not payload['yt_id']:
+            raise HttpError(400, 'fields are missing')
+        podcast = Podcast.objects.create(**payload.dict())
+        return podcast
 
     @route.get('', response=list[PodcastSchema])
     def get_texts(self, request):
