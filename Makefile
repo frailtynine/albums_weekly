@@ -4,7 +4,7 @@ MANAGE_DIR := $(PROJECT_DIR)/backend/manage.py
 DJANGO_RUN := $(POETRY_RUN) $(MANAGE_DIR)
 REACT_DIR := $(PROJECT_DIR)/frontend
 
-include .env
+include .env.dev
 export
 
 DEFAUL_GOAL := help
@@ -12,7 +12,7 @@ DEFAUL_GOAL := help
 help:
 	@echo "run-dev          Start app in dev mode"
 	@echo "help             Show available commands"
-	@echo "load_data        Load json fixtures"
+	@echo "load_data        Load test json fixtures"
 
 run_dev:
 		cd $(PROJECT_DIR) && $(DJANGO_RUN) runserver
@@ -45,6 +45,10 @@ run_fullstack:
 static:
 		cd $(PROJECT_DIR) && $(DJANGO_RUN) collectstatic
 
+dump:
+		cd $(PROJECT_DIR) && $(DJANGO_RUN) dumpdata -o fixtures.json --indent 2
 
+loaddata_django:
+		cd $(PROJECT_DIR) && $(DJANGO_RUN) loaddata fixtures.json
 
 		

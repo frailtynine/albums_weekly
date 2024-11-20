@@ -83,41 +83,42 @@ export default function PodcastForm ({elementId}: PodcastFormProps) {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
       <TextField
-        id="outlined-basic"
-        onPaste={handlePaste}
-        label="YouTube URL"
-        variant="outlined"
-        helperText={youtubeError}
-        value={`https://www.youtube.com/watch?v=${podcastData.yt_id}`}
+      id="outlined-basic"
+      onPaste={handlePaste}
+      label="YouTube URL"
+      variant="outlined"
+      helperText={youtubeError}
+      value={podcastData.yt_id ? `https://www.youtube.com/watch?v=${podcastData.yt_id}` : ''}
       />
       {podcastData.text && (
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <TextField
-            id="outlined-basic"
-            label="Title"
-            variant="outlined"
-            fullWidth
-            value={podcastData.title}
-            onChange={(e) => setPodcastData((prev) => ({...prev, title: e.target.value}))}
-          />
-          <TipTapEditor
-            textValue={podcastData.text}
-            setTextValue={(text: string) => setPodcastData((prev) => ({...prev, text}))}
-            charLimit={4000}
-          />
-        </Box>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <TextField
+        id="outlined-basic"
+        label="Title"
+        variant="outlined"
+        fullWidth
+        value={podcastData.title}
+        onChange={(e) => setPodcastData((prev) => ({...prev, title: e.target.value}))}
+        />
+        <TipTapEditor
+        textValue={podcastData.text}
+        setTextValue={(text: string) => setPodcastData((prev) => ({...prev, text}))}
+        charLimit={4000}
+        />
+      </Box>
       )}
       <Box>
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Checkbox 
-              checked={podcastData.is_published} 
-              onChange={(e) => setPodcastData((prev) => ({ ...prev, is_published: e.target.checked ? true : false }))} 
-              aria-label="Publish" 
-            />
-            <Typography variant="h6">Publish</Typography>
-            </Box>
-        <Button variant="contained" onClick={handleSubmit} sx={{ margin: '10px' }}>Submit</Button>
-        <Button variant="contained" onClick={() => setCurrentComponent(<MainTable />)}>Cancel</Button>      </Box>
+        <Checkbox 
+          checked={podcastData.is_published} 
+          onChange={(e) => setPodcastData((prev) => ({ ...prev, is_published: e.target.checked ? true : false }))} 
+          aria-label="Publish" 
+        />
+        <Typography variant="h6">Publish</Typography>
+        </Box>
+      <Button variant="contained" onClick={handleSubmit} sx={{ margin: '10px' }}>Submit</Button>
+      <Button variant="contained" onClick={() => setCurrentComponent(<MainTable />)}>Cancel</Button>      
+      </Box>
     </Box>
   )
 }
