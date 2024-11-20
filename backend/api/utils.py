@@ -9,7 +9,10 @@ def compose_telegram(instance):
     """Returns text with HTML formatting for Telegram."""
     result = ''
     for album in instance.albums.all().order_by('index'):
-        title = f'<a href="{album.url}">{album.band_name} — {album.album_name}</a>'
+        title = (
+            f'<a href="{album.url}">{album.band_name} — '
+            f'{album.album_name}</a>'
+        )
         result += f'<p>{title}</p><p>{album.text}<br></p>'
     if instance.text:
         result += f'<p>{instance.text}</p>'
