@@ -42,8 +42,14 @@ class ReleaseInfo:
 
     def get_releases(self, title=False):
         if title and self.data['releases']:
-            return {k.title(): v.title() for k, v in self.data['releases'].items()}
+            return {
+                k.title(): v.title()
+                for k, v in self.data['releases'].items()
+            }
         return self.data['releases'] or {}
 
     def __repr__(self):
-        return f"ReleaseInfo(message={self.data['message']}, releases={self.data['releases']})"
+        return (
+            f"ReleaseInfo(message={self.data['message']}, "
+            f"releases={self.data['releases']})"
+        )

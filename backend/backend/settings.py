@@ -9,8 +9,6 @@ env = environ.Env()
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES_DIR = BASE_DIR / 'templates'
 BASE_URL = env('BASE_URL')
-print(BASE_URL)
-
 
 
 # Quick-start development settings - unsuitable for production
@@ -129,6 +127,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ORIGIN_WHITELIST = env.list('CORS_ORIGIN_WHITELIST')
+
 CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS')
 
 LOG_DIR = os.path.join(BASE_DIR, 'logs')
