@@ -121,6 +121,8 @@ celerybeat.pid
 # Environments
 .env
 .venv
+.env.dev
+.env.prod
 env/
 venv/
 ENV/
@@ -164,7 +166,7 @@ wenv/
 .DS_Store
 # Django equipments
 
-static/
+/backend/static/
 logs/
 media/
 backend/media/
@@ -173,3 +175,6 @@ backend/media/
 *.pem
 # persistence_data
 persistence_data/persistence_file
+
+# database files
+fixtures.json

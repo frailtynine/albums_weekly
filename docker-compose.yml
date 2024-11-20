@@ -1,0 +1,32 @@
+version: '3'
+
+volumes:
+  static:
+  media:
+  sqlite_data:
+
+services:
+  backend:
+    build: ./backend/
+    env_file: .env.prod
+    command: poetry run gunicorn backend.wsgi:application --bind 0.0.0.0:8000 --workers 3
+    volumes:
+      - static:/app/static
+      - media:/app/media
+      - sqlite_data:/app/db
+  frontend:
+    build: ./frontend/
+    env_file: .env.prod
+  
+  gateway:
+    build: ./nginx/
+    env_file: .env.prod
+    ports:
+      - 8000:80
+    volumes:
+      - static:/static/
+      - media:/media/
+    depends_on:
+      - backend
+      - frontend
+

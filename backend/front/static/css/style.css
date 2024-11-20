@@ -1,0 +1,124 @@
+body, h1, h2, h3, h4, h5, h6, p {
+    font-family: 'Inter', sans-serif;
+}
+p small {
+   font-size: 14px;
+   font-weight: 400;
+   letter-spacing: 0;
+   line-height: 130%;
+}
+p {
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 135%;
+    color: #0A090B;
+}
+
+h6 {
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0;
+    line-height: 110%;
+}
+
+h6 .link {
+    color: #8E37FF;
+}
+
+h5 {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: 130%;
+    color: #0A090B;
+}
+
+h4 {
+    font-size: 24px;
+    font-weight: 500;
+    letter-spacing: 0;
+    line-height: 130%;
+}
+
+h3 {
+    font-size: 28px;
+    font-weight: 300;
+    letter-spacing: 0;
+    line-height: 130%;
+}
+
+h2 {
+    font-size: 32px;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 120%;
+}
+
+h1 {
+    font-size: 44px;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 112%;
+}
+
+a {
+    color: #8E37FF;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.tag {
+    color: #9B9997
+}
+
+.date {
+    color: #B5B3B0
+}
+
+.tag-link {
+    font-weight: 400;
+}
+
+.navbar-nav .nav-item .active {
+    color: #8E37FF !important;
+}
+
+.hidden {
+    display: none !important;
+}
+
+div[data-youtube-video] {
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+div[data-youtube-video] iframe {
+    border-radius: 0.5rem;
+}
+
+.link {
+    color: #8E37FF !important;
+}
+
+.pagination-active {
+    color: black;
+}
+.pagination-number {
+    color: #9B9997;
+}
+
+.footer-link {
+    color: #9B9997 !important;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: -1;
+    line-height: 110%;
+    margin-right: 2.5rem;
+}
+
+@media (min-width: 576px) {
+    .container-fluid {
+        height: 96px;
+    }
+}

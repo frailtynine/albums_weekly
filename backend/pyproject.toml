@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "albums-weekly"
+version = "0.1.0"
+description = "Albums Weekly website backend"
+authors = ["frailtynine <frailty.nine@gmail.com>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.12"
+bs4 = "^0.0.2"
+requests = "^2.32.3"
+django-bootstrap5 = "^24.2"
+quill-delta = {version = "^1.0.3", extras = ["html"]}
+django-environ = "^0.11.2"
+django-cors-headers = "^4.4.0"
+python-telegram-bot = "^21.6"
+html2text = "^2024.2.26"
+
+[tool.poetry.group.dev.dependencies]
+Django = "^5.0.7"
+selenium = "^4.23.1"
+django-ninja = "^1.2.2"
+django-ninja-jwt = "^5.3.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
