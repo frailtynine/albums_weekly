@@ -4,6 +4,7 @@ volumes:
   static:
   media:
   sqlite_data:
+  chrome:
 
 services:
   backend:
@@ -14,6 +15,7 @@ services:
       - static:/app/static
       - media:/app/media
       - sqlite_data:/app/db
+      - chrome:/usr/bin/chromium-browser
   frontend:
     build: ./frontend/
     image: albums_weekly_frontend:latest
