@@ -6,6 +6,10 @@ import { fetchSonglinkData, postAlbum, updateAlbum, fetchModel } from "../../api
 import Button from '@mui/material/Button';
 import MainTable from "../Misc/MainTable";
 import { useComponent } from "../Misc/Context";
+import CustomDateTimePicker from "../Misc/CustomDateTimePicker";
+import dayjs from "dayjs";
+
+
 
 interface AlbumCreateFormProps {
   elementId?: number | null;
@@ -55,7 +59,6 @@ export default function AlbumCreateForm({elementId}: AlbumCreateFormProps) {
       }));
     }
     catch (err) {
-      console.log(err);
       setSonglinkError('Something wrong, try again');
     }
   }
@@ -78,8 +81,11 @@ export default function AlbumCreateForm({elementId}: AlbumCreateFormProps) {
     }
     else {
       try {
-        await postAlbum(albumData);
-        setCurrentComponent(<MainTable />);
+      await postAlbum({
+        ...albumData,
+        pub_date: new Date().toISOString()
+      });
+      setCurrentComponent(<MainTable />);
       }
       catch (error) {
         console.error(error);
@@ -89,6 +95,18 @@ export default function AlbumCreateForm({elementId}: AlbumCreateFormProps) {
   
   return (
     <Box component="form" autoComplete="off" sx={{ padding: 3, width: 800, margin: '0 auto', display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ mb: 1, display: 'flex', justifyContent: 'flex-end' }}>
+            <CustomDateTimePicker
+              label="Publication date"
+              value={albumData.pub_date ? dayjs(albumData.pub_date) : null}
+              onChange={(newValue) => {
+                setAlbumData((prevData) => ({
+                  ...prevData,
+                  pub_date: newValue ? newValue.toISOString() : ''
+                }))
+              }}
+            />
+        </Box>
         <Box sx={{ display: 'flex', flexDirection: 'row', mb: 1}}>
           <TextField
             sx={{paddingRight: 1}}

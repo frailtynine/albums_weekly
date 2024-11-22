@@ -14,8 +14,8 @@ class Post(models.Model):
     title = models.CharField('Title',
                              max_length=200,
                              unique=True)
-    pub_date = models.DateField('Date',
-                                default=datetime.now)
+    pub_date = models.DateTimeField('Date',
+                                    default=datetime.now)
     is_published = models.BooleanField(default=False)
     telegram_content = models.TextField(null=True)
     substack_content = models.TextField(null=True)
@@ -47,7 +47,7 @@ class Album(models.Model):
         null=True
     )
     is_published = models.BooleanField(default=False)
-    pub_date = models.DateField(
+    pub_date = models.DateTimeField(
         'Date',
         default=datetime.now
     )
@@ -77,7 +77,7 @@ class Text(models.Model):
         'Title',
         max_length=TEXT_TITLE_MAX_LENGTH
     )
-    pub_date = models.DateField(
+    pub_date = models.DateTimeField(
         'Date',
         default=datetime.now
     )
@@ -93,7 +93,7 @@ class Text(models.Model):
 
 class Podcast(models.Model):
     yt_id = models.TextField(null=True)
-    pub_date = models.DateField(
+    pub_date = models.DateTimeField(
         'Date',
         default=datetime.now
     )

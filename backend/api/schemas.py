@@ -31,6 +31,7 @@ class AlbumCreateSchema(Schema):
     album_name: str
     image_url: str
     links: Dict[str, Dict[str, str]]
+    pub_date: Optional[datetime]
 
     @field_validator('text', 'band_name')
     def must_not_be_empty(cls, v):
@@ -78,6 +79,7 @@ class TextCreateSchema(Schema):
     title: str
     content: str
     is_published: bool
+    pub_date: Optional[datetime]
 
 
 class TextSchema(TextCreateSchema):
