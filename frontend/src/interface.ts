@@ -93,11 +93,11 @@ export interface TextRequest {
   title: string;
   content: string;
   is_published: boolean;
+  pub_date: string;
 }
 
 export interface TextResponse extends TextRequest {
   id: number;
-  pub_date: string;
 }
 
 export interface PodcastRequest {

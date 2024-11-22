@@ -51,6 +51,7 @@ class PostController:
         if payload['is_published']:
             post.is_published = True
             for album in albums:
+                album.pub_date = post.pub_date
                 album.is_published = True
                 album.save()
             post.telegram_content = compose_telegram(post)
@@ -103,11 +104,13 @@ class PostController:
         )
         post.title = payload['title']
         post.text = payload['text']
+        post.pub_date = payload['pub_date']
         albums = []
         for index in range(len(payload['album_ids'])):
             album = get_object_or_404(Album, pk=payload['album_ids'][index])
             album.post = post
             album.index = index
+            album.pub_date = post.pub_date
             albums.append(album)
             album.save()
         deleted_albums = post.albums.exclude(id__in=payload['album_ids'])

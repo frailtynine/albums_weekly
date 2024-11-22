@@ -17,6 +17,7 @@ django-cors-headers = "^4.4.0"
 python-telegram-bot = "^21.6"
 html2text = "^2024.2.26"
 flake8 = "^7.1.1"
+psycopg = "^3.2.3"
 
 [tool.poetry.group.dev.dependencies]
 Django = "^5.0.7"

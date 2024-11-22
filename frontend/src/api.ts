@@ -1,5 +1,5 @@
 import axios from "axios";
-import { AlbumResponse, LoginRequest, LoginResponse, SonglinkData, AlbumCreateRequest, TelegramText } from "./interface";
+import { AlbumResponse, LoginRequest, LoginResponse, SonglinkData, AlbumCreateRequest, AlbumRequest, TelegramText } from "./interface";
 
 
 export const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -75,7 +75,7 @@ export async function fetchSonglinkData(url: string): Promise<SonglinkData> {
   return response.data
 }
 
-export async function postAlbum(albumData: AlbumCreateRequest): Promise<AlbumResponse> {
+export async function postAlbum(albumData: AlbumRequest): Promise<AlbumResponse> {
   const response = await api.post<any>('/albums/create', albumData);
   return response.data
 }

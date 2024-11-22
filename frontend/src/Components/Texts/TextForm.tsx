@@ -5,6 +5,8 @@ import { TextRequest } from "../../interface";
 import { postModel, fetchModel, updateModel } from "../../api";
 import MainTable from "../Misc/MainTable";
 import { useComponent } from "../Misc/Context";
+import dayjs from "dayjs";
+import CustomDateTimePicker from "../Misc/CustomDateTimePicker";
 
 interface TextFormProps {
   elementId?: number;
@@ -21,7 +23,8 @@ export default function TextForm ({elementId}: TextFormProps) {
   const [textData, setTextData] = useState<TextRequest>({
     title: '',
     content: '',
-    is_published: false
+    is_published: false,
+    pub_date: ''
   });
 
   useEffect(() => {
@@ -63,6 +66,9 @@ export default function TextForm ({elementId}: TextFormProps) {
         setCurrentComponent(<MainTable />);
       }
       else {
+        if (textData.pub_date === '') {
+          textData.pub_date = new Date().toISOString();
+        }
         await postModel('texts/create', textData);
         setCurrentComponent(<MainTable />);
       }
@@ -77,6 +83,18 @@ export default function TextForm ({elementId}: TextFormProps) {
 
   return (
     <Box sx={{ height: '80vh', width: '100%', display: 'flex', flexDirection: 'column' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '5px' }}>
+        <CustomDateTimePicker
+          label="Publication date"
+          value={textData.pub_date ? dayjs(textData.pub_date) : null}
+          onChange={(newValue) => {
+            setTextData((prevData) => ({
+              ...prevData,
+              pub_date: newValue ? newValue.toISOString() : ''
+            }))
+          }}
+        />
+      </Box>
       <TextField
         id="outlined-basic"
         fullWidth
