@@ -178,3 +178,4 @@ persistence_data/persistence_file
 
 # database files
 fixtures.json
+fixtures.xml

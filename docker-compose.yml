@@ -16,6 +16,7 @@ services:
       - sqlite_data:/app/db
   frontend:
     build: ./frontend/
+    image: albums_weekly-frontend:latest
     env_file: .env.prod
   
   gateway:
