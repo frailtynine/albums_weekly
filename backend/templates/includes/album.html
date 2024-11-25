@@ -21,29 +21,39 @@
     
         <div id="links-{{ object.id }}" style="display: none; height: 1.5rem">
           {% if object.links.spotify %}
-            <a href="{{object.links.spotify.url}}" class="text-decoration-none">
-              <p class="small" style="margin-right: 1.25rem">Spotify</p>
-            </a>
+            <p class="small" style="margin-right: 1.25rem">
+              <a href="{{object.links.spotify.url}}" class="text-decoration-none">
+                Spotify
+              </a>
+            </p>
           {% endif %}
           {% if object.links.bandcamp %}
-            <a href="{{object.links.bandcamp.url}}" class="text-decoration-none">
-              <p class="small" style="margin-right: 1.25rem">Bandcamp</p>
-            </a>
+            <p class="small" style="margin-right: 1.25rem">
+              <a href="{{object.links.bandcamp.url}}" class="text-decoration-none">
+                Bandcamp
+              </a>
+            </p>
           {% endif %}
           {% if object.links.appleMusic %}
-            <a href="{{object.links.appleMusic.url}}" class="text-decoration-none">
-              <p class="small" style="margin-right: 1.25rem">Apple Music</p>
-            </a>
+            <p class="small" style="margin-right: 1.25rem">
+              <a href="{{object.links.appleMusic.url}}" class="text-decoration-none">
+                Apple Music
+              </a>
+            </p>
           {% endif %}
           {% if object.links.youtubeMusic %}
-            <a href="{{object.links.youtubeMusic.url}}" class="text-decoration-none">
-              <p class="small" style="margin-right: 1.25rem">Youtube Music</p>
-            </a>
+            <p class="small" style="margin-right: 1.25rem">
+              <a href="{{object.links.youtubeMusic.url}}" class="text-decoration-none">
+                Youtube Music
+              </a>
+            </p>
           {% endif %}
           {% if object.links.yandex %}
-            <a href="{{object.links.yandex.url}}" class="text-decoration-none">
-              <p class="small" style="margin-right: 1.25rem">Яндекс.Музыка</p>
-            </a>
+            <p class="small" style="margin-right: 1.25rem">
+              <a href="{{object.links.yandex.url}}" class="text-decoration-none">
+                Яндекс.Музыка
+              </a>
+            </p>
           {% endif %}
         </div>
       </div>

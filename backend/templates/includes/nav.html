@@ -20,7 +20,7 @@
           <a class="nav-link {% if view_name == 'text_list' %}active{% endif %}" href="{% url 'text_list' %}"><h6>Тейки</h6></a>
         </li>
         <li class="nav-item">
-          <a class="nav-link fs-6" href="#"><h6>О фэнзине</h6></a>
+          <a class="nav-link {% if view_name == 'about' %}active{% endif %}" href="{% url 'about' %}"><h6>О фэнзине</h6></a>
         </li>
         {% endwith %}
       </ul>
