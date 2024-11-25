@@ -37,7 +37,7 @@ run_react:
 		cd $(REACT_DIR) && npm run dev
 
 run_test:
-		cd $(PROJECT_DIR) && $(DJANGO_RUN) test api.tests
+		cd $(PROJECT_DIR) && $(DJANGO_RUN) test front.tests
 
 run_fullstack:
 		(cd $(PROJECT_DIR) && $(DJANGO_RUN) runserver) & (cd $(REACT_DIR) && npm run dev)
@@ -46,7 +46,7 @@ static:
 		cd $(PROJECT_DIR) && $(DJANGO_RUN) collectstatic
 
 dump:
-		cd $(PROJECT_DIR) && $(DJANGO_RUN) dumpdata -o fixtures.json --indent 2
+		cd $(PROJECT_DIR) && $(DJANGO_RUN) dumpdata --format xml -o fixtures.xml --indent 2 --exclude=auth --exclude=contenttypes --exclude=sessions
 
 loaddata_django:
 		cd $(PROJECT_DIR) && $(DJANGO_RUN) loaddata fixtures.json
