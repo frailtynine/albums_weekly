@@ -7,6 +7,8 @@ import { Box, Button, TextField, Checkbox, Typography } from "@mui/material";
 import getYouTubeID from "get-youtube-id";
 import { useComponent } from "../Misc/Context";
 import MainTable from "../Misc/MainTable";
+import CustomDateTimePicker from "../Misc/CustomDateTimePicker";
+import dayjs from "dayjs";
 
 interface PodcastFormProps {
   elementId?: number;
@@ -17,7 +19,8 @@ export default function PodcastForm ({elementId}: PodcastFormProps) {
     yt_id: '',
     title: '',
     text: '',
-    is_published: false
+    is_published: false,
+    pub_date: ''
   });
   const apiKey: string = import.meta.env.VITE_YT_API;
   const [youtubeError, setYoutubeError] = useState<string>();
@@ -40,6 +43,9 @@ export default function PodcastForm ({elementId}: PodcastFormProps) {
         setCurrentComponent(<MainTable />);
       }
       else {
+        if (podcastData.pub_date === '') {
+          podcastData.pub_date = new Date().toISOString();
+        }
         postModel('podcasts/create', podcastData);
         setCurrentComponent(<MainTable />);
       }
@@ -92,6 +98,16 @@ export default function PodcastForm ({elementId}: PodcastFormProps) {
       />
       {podcastData.text && (
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <CustomDateTimePicker
+          label="Publication date"
+          value={podcastData.pub_date ? dayjs(podcastData.pub_date) : null}
+          onChange={(newValue) => {
+            setPodcastData((prevData) => ({
+              ...prevData,
+              pub_date: newValue ? newValue.toISOString() : ''
+            }))
+          }}
+        />
         <TextField
         id="outlined-basic"
         label="Title"

@@ -65,13 +65,6 @@ export interface PostResponce {
   views: number;
 }
 
-export interface PostByDateResponse {
-  posts: {
-    [year: number]: {
-      [month: number]: PostResponce[];
-    };
-  };
-}
 
 export interface PostData {
   title: string;
@@ -105,9 +98,9 @@ export interface PodcastRequest {
   text: string;
   title: string;
   is_published: boolean;
+  pub_date: string;
 }
 
 export interface PodcastResponse extends PodcastRequest {
   id: number;
-  pub_date: string;
 }
