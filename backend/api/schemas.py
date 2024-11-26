@@ -92,6 +92,7 @@ class PodcastCreateSchema(Schema):
     title: str
     text: str
     is_published: bool
+    pub_date: Optional[datetime]
 
 
 class PodcastSchema(PodcastCreateSchema):

@@ -17,9 +17,10 @@ class PodcastController:
 
     @route.post('/create', response=PodcastSchema)
     def create_text(self, request, payload: PodcastCreateSchema):
-        if not payload['text'] or not payload['yt_id']:
+        payload_dict = payload.dict()
+        if not payload_dict['text'] or not payload_dict['yt_id']:
             raise HttpError(400, 'fields are missing')
-        podcast = Podcast.objects.create(**payload.dict())
+        podcast = Podcast.objects.create(**payload_dict)
         return podcast
 
     @route.get('', response=list[PodcastSchema])
