@@ -1,11 +1,12 @@
 import { Box, Typography, Button, Alert } from "@mui/material";
 import { PostResponce, TelegramText, AlertInterface, PodcastResponse } from "../../interface";
-import { fetchModel, getImages, postModel, revokeBlobUrl } from "../../api";
+import { fetchModel, postModel } from "../../api";
 import { useState, useEffect } from "react";
 import AlbumChips from "../Albums/AlbumChips";
 import TipTapEditor from "../Misc/EditorView";
 import MainTable from "../Misc/MainTable";
 import { useComponent } from "../Misc/Context";
+import ShareImage from "../Misc/ShareImage";
 
 
 
@@ -47,16 +48,9 @@ export default function TelegramPost ({elementId, endpoint }: TelegramPostProps)
   }, [])
 
 
-  const handleGetImages = async (postId: number) => {
-    const url = await getImages(postId);
-    if (url) {
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', 'generated_images.zip');
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      revokeBlobUrl(url);
+  const handleGetImages = () => {
+    if (post?.albums) {
+      setCurrentComponent(<ShareImage albums={post.albums} />);
     }
   };
 
@@ -88,8 +82,7 @@ export default function TelegramPost ({elementId, endpoint }: TelegramPostProps)
             {endpoint === 'posts' && post && (
             <Box sx={{ flex: 1 }}>
               <AlbumChips albums={post.albums}/>
-
-          <Button variant="contained" onClick={() => handleGetImages(post.id)} sx={{ flex: 1}}>Get Images</Button>
+          <Button variant="contained" onClick={handleGetImages} sx={{ flex: 1}}>Get Images</Button>
             </Box>
             )}
             <Box sx={{ flex: 3, overflowY: 'auto', height: '80vh'}}>

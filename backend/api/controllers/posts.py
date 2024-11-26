@@ -1,12 +1,9 @@
-import os
 import logging
-import zipfile
 import asyncio
 
 from django.shortcuts import get_object_or_404
 from django.db.models import Prefetch, Sum
-from django.http import HttpResponse, JsonResponse
-from django.conf import settings
+from django.http import JsonResponse
 from ninja_extra import api_controller, route
 from ninja_jwt.authentication import JWTAuth
 from ninja_extra.permissions import IsAdminUser
@@ -19,7 +16,6 @@ from api.schemas import (
     PostCreateSchema,
     TelegramText
 )
-from api.image_generator import generate_images
 from api.utils import compose_substack, compose_telegram, convert_to_markdown
 from api.telegram import Bot
 
@@ -132,25 +128,3 @@ class PostController:
         post = get_object_or_404(Post, pk=id)
         post.delete()
         return
-
-    @route.get('{id}/get_images')
-    def get_images(self, request, id: int):
-        post = get_object_or_404(Post, pk=id)
-        image_paths = [
-            os.path.join(settings.MEDIA_ROOT, f'output{album.id}.png')
-            for album in post.albums.all()
-        ]
-        generate_images(post.albums.all())
-        zip_file_path = os.path.join(
-            settings.MEDIA_ROOT,
-            'generated_images.zip'
-        )
-        with zipfile.ZipFile(zip_file_path, 'w') as zipf:
-            for image_path in image_paths:
-                zipf.write(image_path, os.path.basename(image_path))
-        with open(zip_file_path, 'rb') as zip_file:
-            response = HttpResponse(zip_file, content_type='application/zip')
-            response['Content-Disposition'] = (
-                'attachment; filename="generated_images.zip"'
-            )
-            return response
