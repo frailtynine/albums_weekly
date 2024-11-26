@@ -15,6 +15,7 @@ export interface AlbumResponse extends AlbumCreateRequest {
   is_published: boolean;
   pub_date: string;
   views: number;
+  index: number;
 }
 
 export interface AlbumRequest extends AlbumCreateRequest {
