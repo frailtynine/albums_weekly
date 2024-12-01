@@ -20,6 +20,7 @@ import { Podcasts } from '@mui/icons-material';
 import { Box } from '@mui/material';
 import MainTable from '../Misc/MainTable';
 import { useComponent } from '../Misc/Context';
+import LogoutButton from '../Misc/LogoutButton';
 
 
 
@@ -69,10 +70,12 @@ export default function ClippedDrawer() {
             >
               Albums Weekly Command Centre
             </Typography>
+            <Box sx={{ ml: 'auto'}}>
+              <LogoutButton />
+            </Box>
         </Toolbar>
       </AppBar>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <Toolbar />
          {currentComponent}
       </Box>
       <SpeedDial

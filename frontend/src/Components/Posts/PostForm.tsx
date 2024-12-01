@@ -140,9 +140,9 @@ export default function PostForm({elementId}: PostFormProps) {
   
   
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', mt: 2, height: '80vh'}}>
       <Box sx={{ flex: 8, display: 'flex', flexDirection: 'column', height: '100%' }}>
-        <Box sx={{ mb: 2 }}>
+        <Box sx={{ mr: 2 }}>
           <TextField
             id="outlined-basic"
             fullWidth
@@ -156,16 +156,9 @@ export default function PostForm({elementId}: PostFormProps) {
             textValue={postData.text}
             setTextValue={(newText) => handleFieldChange('text', newText)}
             charLimit={500}
-            width="40vw"
             height="40vh"
           />
         </Box>
-        </Box>
-        
-        <Box sx={{ marginLeft: '16px' }}>
-          <AlbumChips onClick={onChipClick} albums={unpublishedAlbums} />
-        </Box>
-     
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Checkbox 
@@ -183,6 +176,12 @@ export default function PostForm({elementId}: PostFormProps) {
             Cancel
           </Button>
         </Box>
+        </Box>
+        
+        <Box sx={{ marginLeft: '16px' }}>
+          <AlbumChips onClick={onChipClick} albums={unpublishedAlbums} />
+        </Box>
+     
       </Box>
   
         <Box  sx={{ 
