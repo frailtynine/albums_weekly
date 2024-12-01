@@ -111,14 +111,13 @@ export default function TextForm ({elementId}: TextFormProps) {
         setTextValue={(value) => handleFieldChange('content', value)}
         charLimit={8000}
         youtube={true}
-        width="40vw"
-        height="65vh"
+        width="60vw"
       />
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', margin: '5px' }}>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Checkbox
-            value={textData.is_published}
+            checked={textData.is_published}
             onChange={(event) => setTextData((prev: any) => ({...prev, is_published: event.target.checked}))}
             aria-label="Publish" 
           />

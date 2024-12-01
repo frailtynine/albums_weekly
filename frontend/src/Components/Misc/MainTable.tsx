@@ -17,7 +17,9 @@ import PostAddIcon from '@mui/icons-material/PostAdd';
 import { Podcasts } from '@mui/icons-material';
 import SubstackButton from "./SubstackButton";
 import PodcastForm from "../Podcasts/PodcastForm";
-
+import TelegramIcon from '@mui/icons-material/Telegram';
+import ShareImage from "./ShareImage";
+import ImageIcon from '@mui/icons-material/Image';
 
 
 interface IconMapInterface {
@@ -81,21 +83,32 @@ export default function MainTable() {
     {field: 'is_published', headerName: 'Published', width: 90},
     {
       field: 'tg',
-      headerName: 'Telegram',
+      headerName: 'Social Media',
       sortable: false,
       width: 120,
       renderCell: (params) => {
         if (params.row.type === 'posts' || params.row.type === 'podcasts') {
           return (
-            <Button 
-              style={{ width: '100px' }}
-              variant='contained'
-              onClick={() => setCurrentComponent(
-                <TelegramPost elementId={params.row.title.elementId} endpoint={params.row.type}/>
+            <div>
+              <IconButton
+                color="primary"
+                onClick={() => setCurrentComponent(
+                  <TelegramPost elementId={params.row.title.elementId} endpoint={params.row.type}/>
+                )}   
+              >
+                <TelegramIcon />
+              </IconButton>
+              {params.row.type === 'posts' && (
+                <IconButton
+                  color='primary'
+                  onClick={() => setCurrentComponent(
+                    <ShareImage albums={params.value}/>
+                  )}
+                >
+                  <ImageIcon />
+                </IconButton>
               )}
-            >
-              Post
-            </Button>
+            </div>  
           )
         }
       }
@@ -151,6 +164,7 @@ export default function MainTable() {
           delete: post.id,
           substack: post.substack_content,
           views: post.views,
+          tg: post.albums
         }));
 
         const albums = await fetchModels('albums');
@@ -205,7 +219,7 @@ export default function MainTable() {
 
   return (
     <Box sx={{ width: '100%', height: '80vh', display: 'flex', flexDirection: 'column'}}>
-      <Button sx={{ alignSelf: 'flex-end', mb: 2 }} variant='contained' onClick={() => setCurrentComponent(<TelegramPost />)}>Post to Telegram</Button>
+      <Button sx={{ alignSelf: 'flex-end', mb: 2, fontWeight: '500'}} onClick={() => setCurrentComponent(<TelegramPost />)}>Post to Telegram</Button>
       <DataGrid
       sx={{ flex: '1', overflowY: 'auto'}}
       rows={rows}

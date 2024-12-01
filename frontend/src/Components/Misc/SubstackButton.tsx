@@ -31,7 +31,7 @@ const SubstackButton: React.FC<OpenSubstackProps> = ({ type, dataToCopy, openSub
   };
 
   return (
-    <Button onClick={handleClick} variant='contained' style={{ width: '100px' }}>
+    <Button onClick={handleClick} style={{ width: '100px', fontWeight: '500' }}>
       {openSubstack ? 'Create' : 'Copy'}
     </Button>
   );

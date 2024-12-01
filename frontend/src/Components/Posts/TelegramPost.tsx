@@ -2,11 +2,9 @@ import { Box, Typography, Button, Alert } from "@mui/material";
 import { PostResponce, TelegramText, AlertInterface, PodcastResponse } from "../../interface";
 import { fetchModel, postModel } from "../../api";
 import { useState, useEffect } from "react";
-import AlbumChips from "../Albums/AlbumChips";
 import TipTapEditor from "../Misc/EditorView";
 import MainTable from "../Misc/MainTable";
 import { useComponent } from "../Misc/Context";
-import ShareImage from "../Misc/ShareImage";
 
 
 
@@ -45,14 +43,7 @@ export default function TelegramPost ({elementId, endpoint }: TelegramPostProps)
         console.error(error)
       })
     }
-  }, [])
-
-
-  const handleGetImages = () => {
-    if (post?.albums) {
-      setCurrentComponent(<ShareImage albums={post.albums} />);
-    }
-  };
+  }, []);
 
   const handlePostToTelegram = async () => {
     if (telegramText) {
@@ -72,35 +63,23 @@ export default function TelegramPost ({elementId, endpoint }: TelegramPostProps)
   }
 
   return (
-    <Box sx={{  display: 'flex' }}>
-    <Box sx={{ flex: 3, overflowY: 'auto' }}>
-        <Box>
-            {endpoint === 'posts' && post && (
-            <Typography variant="h4" sx={{ padding:1 }}>{post.title}</Typography>
-            )}
-          <Box sx={{ display: 'flex', gap: '16px' }}>
-            {endpoint === 'posts' && post && (
-            <Box sx={{ flex: 1 }}>
-              <AlbumChips albums={post.albums}/>
-          <Button variant="contained" onClick={handleGetImages} sx={{ flex: 1}}>Get Images</Button>
-            </Box>
-            )}
-            <Box sx={{ flex: 3, overflowY: 'auto', height: '80vh'}}>
-              {alert && (<Alert severity={alert.severity}>{alert.message}</Alert>)}
-              <TipTapEditor 
+    <Box sx={{  display: 'flex', flexDirection: 'column', height: '80vh', mt: 2, }}>
+          {endpoint === 'posts' && post && (
+          <Typography variant="h4" sx={{ padding:1, }}>{post.title}</Typography>
+          )}
+            {alert && (<Alert severity={alert.severity}>{alert.message}</Alert>)}
+            <TipTapEditor 
               textValue={endpoint === 'podcasts' ? podcast?.text || '' : post?.telegram_content || ''} 
               setTextValue={setTelegramText} 
               charLimit={4000} 
               key={post?.id || podcast?.id}
-              />
-            </Box>
+              height="63vh"
+              width="60vw"
+            />
+        <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, justifyContent: 'flex-end', mb: 1}}>
+          <Button variant='contained' onClick={() => handlePostToTelegram()} sx={{ margin: '10px' }}>Post to Telegram</Button>
+          <Button variant='contained' onClick={() => setCurrentComponent(<MainTable />)} sx={{ margin: '10px' }}>Cancel</Button>
         </Box>
-          <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, justifyContent: 'flex-end'}}>
-            <Button variant='contained' onClick={() => handlePostToTelegram()} sx={{ margin: '10px' }}>Post to Telegram</Button>
-            <Button variant='contained' onClick={() => setCurrentComponent(<MainTable />)} sx={{ margin: '10px' }}>Cancel</Button>
-          </Box>
-        </Box>
-    </Box>
   </Box>
   );
 }
