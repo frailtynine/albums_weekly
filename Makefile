@@ -37,7 +37,7 @@ run_react:
 		cd $(REACT_DIR) && npm run dev
 
 run_test:
-		cd $(PROJECT_DIR) && $(DJANGO_RUN) test front.tests
+		cd $(PROJECT_DIR) && $(DJANGO_RUN) test api.tests
 
 run_fullstack:
 		(cd $(PROJECT_DIR) && $(DJANGO_RUN) runserver) & (cd $(REACT_DIR) && npm run dev)
