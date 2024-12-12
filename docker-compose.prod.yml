@@ -4,7 +4,6 @@ volumes:
   static:
   media:
   sqlite_data:
-  chrome:
   pg_data:
 
 services:
@@ -22,7 +21,6 @@ services:
       - static:/app/static
       - media:/app/media
       - sqlite_data:/app/db
-      - chrome:/usr/bin/chromium-browser
     depends_on:
       - db
   frontend:
