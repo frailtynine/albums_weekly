@@ -9,6 +9,8 @@ import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-ki
 import TipTapEditor from "../Misc/EditorView";
 import MainTable from "../Misc/MainTable";
 import { useComponent } from "../Misc/Context";
+import CustomDateTimePicker from "../Misc/CustomDateTimePicker";
+import dayjs from "dayjs";
 
 interface PostFormProps {
   elementId?: number | null;
@@ -25,7 +27,8 @@ export default function PostForm({elementId}: PostFormProps) {
     title: '',
     album_ids: [],
     text: '',
-    is_published: false
+    is_published: false,
+    pub_date: ''
   });
   const [selectedAlbums, setSelectedAlbums] = useState<number[]>([]);
   const [unpublishedAlbums, setUnpublishedAlbums] = useState<AlbumResponse[]>([]);
@@ -39,7 +42,8 @@ export default function PostForm({elementId}: PostFormProps) {
           title: fetchedData.title,
           album_ids: album_ids,
           text: fetchedData.text,
-          is_published: fetchedData.is_published
+          is_published: fetchedData.is_published,
+          pub_date: fetchedData.pub_date
         });
         setSelectedAlbums(album_ids);
       }
@@ -111,7 +115,8 @@ export default function PostForm({elementId}: PostFormProps) {
       title: postData.title,
       album_ids: selectedAlbums,
       text: postData.text,
-      is_published: postData.is_published
+      is_published: postData.is_published,
+      pub_date: postData.pub_date
     };
     try {
       if (elementId) {
@@ -119,6 +124,9 @@ export default function PostForm({elementId}: PostFormProps) {
         setCurrentComponent(<MainTable />);
       }
       else {
+        if (postData.pub_date === '') {
+          postData.pub_date = new Date().toISOString();
+        }
         await postModel('posts/create', payload);
         setCurrentComponent(<MainTable />);
       }
@@ -142,6 +150,18 @@ export default function PostForm({elementId}: PostFormProps) {
   return (
     <Box sx={{ display: 'flex', mt: 2, height: '80vh'}}>
       <Box sx={{ flex: 8, display: 'flex', flexDirection: 'column', height: '100%' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mr: 2, mb: 1}}>
+          <CustomDateTimePicker
+            label="Publication date"
+            value={postData.pub_date ? dayjs(postData.pub_date) : null}
+            onChange={(newValue) => {
+              setPostData((prevData) => ({
+          ...prevData,
+          pub_date: newValue ? newValue.toISOString() : ''
+              }))
+            }}
+          />
+        </Box>
         <Box sx={{ mr: 2 }}>
           <TextField
             id="outlined-basic"
