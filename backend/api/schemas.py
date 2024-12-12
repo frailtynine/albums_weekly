@@ -57,6 +57,7 @@ class PostCreateSchema(Schema):
     album_ids: list[int]
     text: str
     is_published: bool
+    pub_date: Optional[datetime]
 
 
 class PostByDateSchema(Schema):

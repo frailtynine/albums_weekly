@@ -72,6 +72,7 @@ export interface PostData {
   album_ids: number[];
   text: string;
   is_published: boolean;
+  pub_date: string;
 }
 
 export interface TelegramText {
