@@ -3,8 +3,12 @@
 {% block title %} {{ album.band_name }} — {{ album.album_name }}{% endblock %}
 {% block preview %}
 <meta property="og:title" content="{{ album.band_name }} — {{ album.album_name }}">
-<meta property"og:type" content="article">
+<meta property="og:type" content="article">
 <meta property="og:image" content="{{ MEDIA_URL }}{{ object.image_url }}">
+<meta property="twitter:image" content="{{ MEDIA_URL }}{{ object.image_url }}">
+<meta property="twitter:title" content="{{ album.band_name }} — {{ album.album_name }}">
+<meta property="og:description" content="{{ album.text }}">
+<meta property="twitter:description" content="{{ album.text }}">
 {% endblock %}
 {% block content %}
 <div class="rounded-5 bg-white" style="margin-bottom: 1.25rem; padding-bottom: 2.5rem">

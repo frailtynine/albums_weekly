@@ -20,7 +20,7 @@
       <div class="col d-flex align-items-center">
         <button 
           id="playButton-{{ object.id }}" class="d-flex align-items-center" 
-          style="border: none; background: none; padding: 0; {% if view_name == 'album_detail' %}display: none !important;{% endif %}" 
+          style="border: none; background: none; padding: 0; {% if view_name == 'album_detail' %}display: none !important;{% endif %}"
           onclick="toggleLinks({{ object.id }})">
           <img src="{% static 'icons/play_circle.png' %}" style="margin-right: 0.25rem;">
           <h6 class="link" style="margin: 0; cursor: pointer;">Слушать</h6>
@@ -29,7 +29,7 @@
         <div id="links-{{ object.id }}" style="{% if view_name == 'album_detail' %}display: flex;{% else %}display: none;{% endif %} height: 1.5rem">
           {% if object.links.spotify %}
             <p class="small" style="margin-right: 1.25rem">
-              <a href="{{object.links.spotify.url}}" class="text-decoration-none">
+              <a href="{{object.links.spotify.url}}" class="text-decoration-none" target="_blank" rel="noopener norefferer">
                 Spotify
               </a>
             </p>
