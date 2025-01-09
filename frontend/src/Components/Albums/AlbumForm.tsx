@@ -5,10 +5,11 @@ import { AlbumResponse, AlbumRequest } from "../../interface";
 import { fetchSonglinkData, postAlbum, updateAlbum, fetchModel } from "../../api";
 import Button from '@mui/material/Button';
 import MainTable from "../Misc/MainTable";
+import {Checkbox, Typography} from "@mui/material"; 
 import { useComponent } from "../Misc/Context";
 import CustomDateTimePicker from "../Misc/CustomDateTimePicker";
 import dayjs from "dayjs";
-
+import TipTapEditor from "../Misc/EditorView";
 
 
 interface AlbumCreateFormProps {
@@ -46,6 +47,11 @@ export default function AlbumCreateForm({elementId}: AlbumCreateFormProps) {
       } catch (err) {
         console.error('Error fetching album:', err);
       }
+    } else {
+      setAlbumData((prevData) => ({
+        ...prevData,
+        text: localStorage.getItem('albumText') || ''
+      }))
     }
   };
 
@@ -81,17 +87,29 @@ export default function AlbumCreateForm({elementId}: AlbumCreateFormProps) {
     }
     else {
       try {
-      await postAlbum({
-        ...albumData,
-        pub_date: new Date().toISOString()
-      });
-      setCurrentComponent(<MainTable />);
+        await postAlbum({
+          ...albumData,
+          pub_date: new Date().toISOString()
+        });
+        localStorage.removeItem('albumText');
+        setCurrentComponent(<MainTable />);
       }
       catch (error) {
         console.error(error);
       }
     }
   }
+
+
+  const handleFieldChange = (field: keyof AlbumRequest, value: string) => {
+    setAlbumData((prevData) => ({
+      ...prevData,
+      [field]: value,
+    }));
+    if (!elementId) {
+      localStorage.setItem(`album${field.charAt(0).toUpperCase() + field.slice(1)}`, value);
+    }
+  };
   
   return (
     <Box component="form" autoComplete="off" sx={{ padding: 3, width: 800, margin: '0 auto', display: 'flex', flexDirection: 'column' }}>
@@ -134,18 +152,10 @@ export default function AlbumCreateForm({elementId}: AlbumCreateFormProps) {
           />
         </Box>
       <Box sx={{mb: 1}}>
-      <TextField
-        fullWidth
-        id="outlined-multiline-static"
-        label="Album review text"
-        multiline
-        rows={8}
-        onChange={(e) => setAlbumData((prevData) => ({
-          ...prevData,
-          text: e.target.value
-        }))}
-        value={albumData.text}
-      />
+        <TipTapEditor
+          textValue={albumData.text}
+          setTextValue={(newText) => handleFieldChange('text', newText)}
+        />
       </Box>
       <Box sx={{mb: 1}}>
       <TextField 
@@ -163,6 +173,14 @@ export default function AlbumCreateForm({elementId}: AlbumCreateFormProps) {
       />
       </Box>
       <Box>
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Checkbox 
+            checked={albumData.is_published} 
+            onChange={(e) => setAlbumData((prev) => ({ ...prev, is_published: e.target.checked ? true : false }))} 
+            aria-label="Publish" 
+          />
+          <Typography variant="h6">Publish</Typography>
+          </Box>
         <Button
           sx={{margin: 1}}
           variant="contained"
