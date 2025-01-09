@@ -36,8 +36,8 @@ class Album(models.Model):
     )
     spotify_url = models.URLField('Spotify URL', null=True)
     url = models.URLField('Album URL')
-    band_name = models.CharField('Band name', max_length=50)
-    album_name = models.CharField('Album name', max_length=100)
+    band_name = models.CharField('Band name', max_length=100)
+    album_name = models.CharField('Album name', max_length=150)
     image_url = models.URLField('Image URL')
     links = models.JSONField('Links to streamings')
     post = models.ForeignKey(
@@ -54,6 +54,8 @@ class Album(models.Model):
     index = models.IntegerField('Index in Post', null=True)
 
     def save(self, *args, **kwargs):
+        """Saves album cover to server.
+        """
         if self.image_url.startswith('http'):
             image_name = (
                 f'{slugify(self.band_name)}-{slugify(self.album_name)}.jpeg'
@@ -105,25 +107,43 @@ class Podcast(models.Model):
     )
 
 
-class PostViewCount(models.Model):
+class ViewCountBase(models.Model):
+    count = models.IntegerField(default=0)
+
+    class Meta:
+        abstract = True
+
+    def __str__(self) -> str:
+        return f'{self.object}: {self.count} views'
+
+
+class PostViewCount(ViewCountBase):
     object = models.ForeignKey(
         Post,
         on_delete=models.CASCADE,
         related_name='view_count'
     )
-    count = models.IntegerField(default=0)
-
-    def __str__(self) -> str:
-        return f'{self.object}: {self.count} views'
 
 
-class AlbumViewCount(models.Model):
+class AlbumViewCount(ViewCountBase):
     object = models.ForeignKey(
         Album,
         on_delete=models.CASCADE,
         related_name='view_count'
     )
-    count = models.IntegerField(default=0)
 
-    def __str__(self) -> str:
-        return f'{self.object}: {self.count} views'
+
+class TextViewCount(ViewCountBase):
+    object = models.ForeignKey(
+        Text,
+        on_delete=models.CASCADE,
+        related_name='view_count'
+    )
+
+
+class PodcastViewCount(ViewCountBase):
+    object = models.ForeignKey(
+        Podcast,
+        on_delete=models.CASCADE,
+        related_name='view_count'
+    )

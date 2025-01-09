@@ -156,8 +156,8 @@ export default function PostForm({elementId}: PostFormProps) {
             value={postData.pub_date ? dayjs(postData.pub_date) : null}
             onChange={(newValue) => {
               setPostData((prevData) => ({
-          ...prevData,
-          pub_date: newValue ? newValue.toISOString() : ''
+                ...prevData,
+                pub_date: newValue ? newValue.toISOString() : ''
               }))
             }}
           />
