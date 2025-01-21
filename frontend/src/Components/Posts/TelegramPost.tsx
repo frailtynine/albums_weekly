@@ -1,5 +1,5 @@
 import { Box, Typography, Button, Alert } from "@mui/material";
-import { PostResponce, TelegramText, AlertInterface, PodcastResponse } from "../../interface";
+import { PostResponce, TelegramText, AlertInterface, PodcastResponse, AlbumResponse } from "../../interface";
 import { fetchModel, postModel } from "../../api";
 import { useState, useEffect } from "react";
 import TipTapEditor from "../Misc/EditorView";
@@ -24,26 +24,32 @@ interface TelegramPostProps {
 export default function TelegramPost ({elementId, endpoint }: TelegramPostProps) {
   const [post, setPost] = useState<PostResponce>();
   const [podcast, setPodcast] = useState<PodcastResponse>();
+  const [album, setAlbum] = useState<AlbumResponse>();
   const [telegramText, setTelegramText] = useState<string>('');
   const [alert, setAlert] = useState<AlertInterface>();
   const { setCurrentComponent } = useComponent();
 
+
   useEffect(() => {
-    if (elementId && endpoint) {
-      fetchModel(endpoint, elementId)
-      .then(data => {
-        if (endpoint === 'posts') {
-          setPost(data);
-        }
-        else if (endpoint === 'podcasts') {
-          setPodcast(data);
-        }
-      })
-      .catch(error => {
-        console.error(error)
-      })
-    }
-  }, []);
+      if (elementId && endpoint) {
+        fetchModel(endpoint, elementId)
+          .then(data => {
+            if (endpoint === 'posts') {
+              setPost(data);
+            } else if (endpoint === 'podcasts') {
+              setPodcast(data);
+            } else if (endpoint === 'albums') {
+              setAlbum(data);
+              setTelegramText(data.telegram || '');
+              console.log(telegramText);
+            }
+            
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      }
+  }, [elementId, endpoint]);
 
   const handlePostToTelegram = async () => {
     if (telegramText) {
@@ -69,7 +75,7 @@ export default function TelegramPost ({elementId, endpoint }: TelegramPostProps)
           )}
             {alert && (<Alert severity={alert.severity}>{alert.message}</Alert>)}
             <TipTapEditor 
-              textValue={endpoint === 'podcasts' ? podcast?.text || '' : post?.telegram_content || ''} 
+              textValue={endpoint === 'podcasts' ? podcast?.text || '' : endpoint === 'albums' ? album?.telegram || '' : post?.telegram_content || ''}   
               setTextValue={setTelegramText} 
               charLimit={4000} 
               key={post?.id || podcast?.id}

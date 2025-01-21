@@ -12,7 +12,11 @@ class Bot():
     def __init__(self, message):
         self.token = settings.TG_BOT_TOKEN
         self.message = message
-        self.chat_token = settings.TG_CHANNEL_TOKEN
+        self.chat_token = (
+            settings.TG_TEST_CHANNEL_TOKEN
+            if settings.DEBUG
+            else settings.TG_CHANNEL_TOKEN
+        )
         logger.info('Bot has been initiated successfully.')
 
     async def get_info(self):
@@ -26,5 +30,6 @@ class Bot():
             await bot.send_message(
                 text=self.message,
                 chat_id=self.chat_token,
-                parse_mode=ParseMode.MARKDOWN)
+                parse_mode=ParseMode.MARKDOWN
+            )
             logger.info(f'Message {self.message} has been sent.')

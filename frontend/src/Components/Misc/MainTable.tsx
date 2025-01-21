@@ -87,7 +87,7 @@ export default function MainTable() {
       sortable: false,
       width: 120,
       renderCell: (params) => {
-        if (params.row.type === 'posts' || params.row.type === 'podcasts') {
+        if (params.row.type === 'albums' || params.row.type === 'podcasts'|| params.row.type === 'posts') {
           return (
             <div>
               <IconButton
@@ -175,6 +175,7 @@ export default function MainTable() {
           date: album.pub_date,
           is_published: album.is_published ? 'Yes' : 'No',
           views: album.views,
+          tg: album
         }));
 
         const texts = await fetchModels('texts');

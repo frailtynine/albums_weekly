@@ -3,6 +3,17 @@ import requests
 import html2text
 from django.http import HttpResponseBadRequest
 from ninja_extra.exceptions import ParseError as BadRequest
+from django.conf import settings
+
+from api.models import Album
+
+
+LINK_NAMES = {
+    'spotify': 'Spotify',
+    'appleMusic': 'Apple Music',
+    'yandex': 'Я.Музыка',
+    'bandcamp': 'Bandcamp'
+}
 
 
 def compose_telegram(instance):
@@ -17,6 +28,30 @@ def compose_telegram(instance):
     if instance.text:
         result += f'<p>{instance.text}</p>'
     return result
+
+
+def compose_album_tg(album: Album):
+    links_list = []
+    for key, name in LINK_NAMES.items():
+        if key in album.links:
+            links_list.append(
+                f'<a href="{album.links[key]["url"]}">{name}</a>'
+            )
+    links = ''
+    for index in range(len(links_list)):
+        if index == len(links_list) - 1:
+            links += f'{links_list[index]}'
+        else:
+            links += f'{links_list[index]} | '
+
+    return (
+        f'<a href="{settings.BASE_URL}/album/{album.id}">'
+        f'{album.band_name} — {album.album_name}</a>'
+        f'<br>'
+        f'{album.text}'
+        f'<br>'
+        f'{links}'
+    )
 
 
 def compose_substack(instance):

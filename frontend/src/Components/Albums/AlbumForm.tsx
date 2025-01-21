@@ -32,6 +32,7 @@ export default function AlbumCreateForm({elementId}: AlbumCreateFormProps) {
     }
   );
   const [songlinkError, setSonglinkError] = useState<string>();
+  let wasPublished: boolean = false
 
   useEffect(() => {
     fetchAlbum();
@@ -44,6 +45,9 @@ export default function AlbumCreateForm({elementId}: AlbumCreateFormProps) {
         const albumToUpdate: AlbumResponse = await fetchModel('albums', elementId);
         const { id, ...filteredAlbumData } = albumToUpdate;
         setAlbumData(filteredAlbumData);
+        if (filteredAlbumData.is_published) {
+          wasPublished = true;
+        }
       } catch (err) {
         console.error('Error fetching album:', err);
       }
@@ -78,6 +82,9 @@ export default function AlbumCreateForm({elementId}: AlbumCreateFormProps) {
   const handleSubmit = async () => {
     if (elementId) {
       try {
+        if (!wasPublished && albumData.is_published) {
+            albumData.pub_date = new Date().toISOString();
+        }
         await updateAlbum(elementId, albumData);
         setCurrentComponent(<MainTable />);
       }
