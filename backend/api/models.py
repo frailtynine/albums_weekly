@@ -32,7 +32,6 @@ class Post(models.Model):
 class Album(models.Model):
     text = models.TextField(
         'Text',
-        max_length=1100
     )
     spotify_url = models.URLField('Spotify URL', null=True)
     url = models.URLField('Album URL')

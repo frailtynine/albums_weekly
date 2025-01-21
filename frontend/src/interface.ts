@@ -16,6 +16,7 @@ export interface AlbumResponse extends AlbumCreateRequest {
   pub_date: string;
   views: number;
   index: number;
+  telegram: string;
 }
 
 export interface AlbumRequest extends AlbumCreateRequest {

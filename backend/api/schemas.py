@@ -21,6 +21,7 @@ class AlbumSchema(Schema):
     is_published: bool
     pub_date: datetime
     views: Optional[int] = 0
+    telegram: Optional[str] = ''
 
 
 class AlbumCreateSchema(Schema):

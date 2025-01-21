@@ -26,6 +26,7 @@ export default function TextForm ({elementId}: TextFormProps) {
     is_published: false,
     pub_date: ''
   });
+  let wasPublished: boolean = false
 
   useEffect(() => {
     if (!elementId) {
@@ -44,6 +45,9 @@ export default function TextForm ({elementId}: TextFormProps) {
     else {
       fetchModel('texts', elementId)
       .then(text => {
+        if (text.is_published) {
+          wasPublished = true;
+        }
         setTextData(text);
       })
       .catch(error => {console.error(error)})
@@ -62,6 +66,9 @@ export default function TextForm ({elementId}: TextFormProps) {
   const handleSubmit = async () => {
     try {
       if (elementId) {
+        if (!wasPublished && textData.is_published) {
+          textData.pub_date = new Date().toISOString();
+        }
         await updateModel('texts', elementId, textData);
         setCurrentComponent(<MainTable />);
       }

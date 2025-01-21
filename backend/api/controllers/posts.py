@@ -57,7 +57,8 @@ class PostController:
 
     @route.post('/send_to_telegram')
     def send_to_telegram(self, request, payload: TelegramText):
-        bot = Bot(message=convert_to_markdown(payload.text))
+        message = convert_to_markdown(payload.text)
+        bot = Bot(message=message)
         try:
             asyncio.run(bot.send_message())
             return JsonResponse({'status': 'success'}, status=200)
@@ -73,12 +74,6 @@ class PostController:
             ),
             Prefetch('view_count')
         ).annotate(views=Sum('view_count__count')).order_by('id')
-
-        # left for testing purposes
-        # for post_post in posts:
-        #     post_post.telegram_content = compose_telegram(post_post)
-        #     post_post.substack_content = compose_substack(post_post)
-        #     post_post.save()
         return posts
 
     @route.get('/{id}', response=PostSchema)

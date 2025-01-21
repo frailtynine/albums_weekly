@@ -186,5 +186,8 @@ TG_BOT_TOKEN = env('TG_BOT_TOKEN')
 TG_CHANNEL_TOKEN = (
     env('TG_CHANNEL_TOKEN')
 )
+TG_TEST_CHANNEL_TOKEN = (
+    env('TG_TEST_CHANNEL_TOKEN')
+)
 
 SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"

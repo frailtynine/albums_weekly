@@ -11,9 +11,9 @@ from api.models import Album
 from api.schemas import (
     AlbumSchema,
     SonglinkResponse,
-    AlbumCreateSchema
+    AlbumCreateSchema,
 )
-from api.utils import get_songlink_data
+from api.utils import get_songlink_data, compose_album_tg
 
 logger = logging.getLogger(__name__)
 
@@ -46,7 +46,9 @@ class AlbumController:
     @route.get('/{id}', response=AlbumSchema)
     def get_album(self, request, id: int):
         album = get_object_or_404(Album, pk=id)
-        return album
+        album_return = AlbumSchema.from_orm(album)
+        album_return.telegram = compose_album_tg(album)
+        return album_return
 
     @route.put('/{id}', response=AlbumSchema)
     def update_album(self, request, id: int, item: AlbumCreateSchema):
@@ -62,3 +64,5 @@ class AlbumController:
         album = get_object_or_404(Album, pk=id)
         album.delete()
         return
+    
+
