@@ -16,6 +16,12 @@ export default function ShareImage({albums}: ShareImageProps) {
   const imageRefs = useRef<HTMLDivElement[]>([]);
   const { setCurrentComponent } = useComponent();
 
+  const stripHtmlTags = (html: string): string => {
+    const tmp = document.createElement("div");
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || "";
+  };
+
   const handleDownload = async () => {
     const zip = new JSZip();
     for (let i = 0; i < albums.length; i++) {
@@ -114,7 +120,7 @@ export default function ShareImage({albums}: ShareImageProps) {
                 paddingBottom: '20px',
                     }}
             >
-              {album.text}
+              {stripHtmlTags(album.text)}
             </div>
           </div>
         </div>
