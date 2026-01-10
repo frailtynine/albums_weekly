@@ -58,7 +58,7 @@ def compose_substack(instance):
     """Returns text with substack formatting.
     """
     result = f'{instance.title}\n\n'
-    for album in instance.albums.all():
+    for album in instance.albums.all().order_by('index'):
         title = f'<h2>{album.band_name} — {album.album_name}</h2><br>'
         result += f'<p>{title}{album.text}</p>{album.spotify_url}'
     return result
