@@ -2,6 +2,7 @@ import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+
 import PostForm from '../Posts/PostForm';
 import TextForm from '../Texts/TextForm';
 import { CircularProgress } from '@mui/material';
@@ -75,7 +76,8 @@ export default function ClippedDrawer() {
             </Box>
         </Toolbar>
       </AppBar>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <Box component="main" sx={{ flexGrow: 1, p: 2 }}>
+        <Toolbar />
          {currentComponent}
       </Box>
       <SpeedDial

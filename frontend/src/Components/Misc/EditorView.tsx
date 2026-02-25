@@ -98,7 +98,7 @@ export default function TipTapEditor ({
 
   return (
    <Box>
-    <Box sx={{ marginBottom: '10px', display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+    <Box sx={{ marginBottom: '6px', display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
       <Chip onClick={() => editor.chain().focus().toggleBold().run()} label='Bold'/>
       <Chip onClick={() => editor.chain().focus().toggleItalic().run()} label='Italic'/>
       <Chip onClick={setLink} label='Link'/>
@@ -157,7 +157,7 @@ export default function TipTapEditor ({
           width: width,  
           border: '1px solid #ccc',  
           borderRadius: '8px',  
-          padding: '16px',  
+          padding: '12px',  
           backgroundColor: '#fff',
           whiteSpace: 'pre-wrap', 
           overflow: 'auto',

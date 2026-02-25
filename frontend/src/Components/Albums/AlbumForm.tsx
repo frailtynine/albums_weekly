@@ -119,7 +119,7 @@ export default function AlbumCreateForm({elementId}: AlbumCreateFormProps) {
   };
   
   return (
-    <Box component="form" autoComplete="off" sx={{ padding: 3, width: 800, margin: '0 auto', display: 'flex', flexDirection: 'column' }}>
+    <Box component="form" autoComplete="off" sx={{ padding: 2, width: 800, margin: '0 auto', display: 'flex', flexDirection: 'column' }}>
         <Box sx={{ mb: 1, display: 'flex', justifyContent: 'flex-end' }}>
             <CustomDateTimePicker
               label="Publication date"
