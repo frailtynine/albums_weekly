@@ -5,7 +5,7 @@ ENV PYTHONUNBUFFERED 1
 
 RUN pip install --upgrade pip
 
-RUN pip install gunicorn==20.1.0
+RUN pip install "gunicorn>=21.2.0"
 
 COPY pyproject.toml poetry.lock ./
 RUN pip install --no-cache-dir poetry && \
