@@ -148,7 +148,7 @@ export default function PostForm({elementId}: PostFormProps) {
   
   
   return (
-    <Box sx={{ display: 'flex', mt: 2, height: '80vh'}}>
+    <Box sx={{ display: 'flex', mt: 1, height: '80vh'}}>
       <Box sx={{ flex: 8, display: 'flex', flexDirection: 'column', height: '100%' }}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', mr: 2, mb: 1}}>
           <CustomDateTimePicker
@@ -171,7 +171,7 @@ export default function PostForm({elementId}: PostFormProps) {
             value={postData.title}
             onChange={(e) => handleFieldChange('title', e.target.value)}
           />
-        <Box sx={{ mb: 2, mt: 2 }}>
+        <Box sx={{ mb: 1, mt: 1 }}>
           <TipTapEditor
             textValue={postData.text}
             setTextValue={(newText) => handleFieldChange('text', newText)}

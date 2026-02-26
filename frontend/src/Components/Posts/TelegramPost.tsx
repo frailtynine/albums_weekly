@@ -69,9 +69,9 @@ export default function TelegramPost ({elementId, endpoint }: TelegramPostProps)
   }
 
   return (
-    <Box sx={{  display: 'flex', flexDirection: 'column', height: '80vh', mt: 2, }}>
+    <Box sx={{  display: 'flex', flexDirection: 'column', height: '80vh', mt: 1, }}>
           {endpoint === 'posts' && post && (
-          <Typography variant="h4" sx={{ padding:1, }}>{post.title}</Typography>
+          <Typography variant="h5" sx={{ padding: 0.5 }}>{post.title}</Typography>
           )}
             {alert && (<Alert severity={alert.severity}>{alert.message}</Alert>)}
             <TipTapEditor 
@@ -82,9 +82,9 @@ export default function TelegramPost ({elementId, endpoint }: TelegramPostProps)
               height="63vh"
               width="60vw"
             />
-        <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, justifyContent: 'flex-end', mb: 1}}>
-          <Button variant='contained' onClick={() => handlePostToTelegram()} sx={{ margin: '10px' }}>Post to Telegram</Button>
-          <Button variant='contained' onClick={() => setCurrentComponent(<MainTable />)} sx={{ margin: '10px' }}>Cancel</Button>
+        <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, justifyContent: 'flex-end', mt: 1}}>
+          <Button variant='contained' onClick={() => handlePostToTelegram()}>Post to Telegram</Button>
+          <Button variant='contained' onClick={() => setCurrentComponent(<MainTable />)}>Cancel</Button>
         </Box>
   </Box>
   );

@@ -87,7 +87,7 @@ export default function PodcastForm ({elementId}: PodcastFormProps) {
   };
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
       <TextField
       id="outlined-basic"
       onPaste={handlePaste}
@@ -97,7 +97,7 @@ export default function PodcastForm ({elementId}: PodcastFormProps) {
       value={podcastData.yt_id ? `https://www.youtube.com/watch?v=${podcastData.yt_id}` : ''}
       />
       {podcastData.text && (
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
         <CustomDateTimePicker
           label="Publication date"
           value={podcastData.pub_date ? dayjs(podcastData.pub_date) : null}
@@ -132,7 +132,7 @@ export default function PodcastForm ({elementId}: PodcastFormProps) {
         />
         <Typography variant="h6">Publish</Typography>
         </Box>
-      <Button variant="contained" onClick={handleSubmit} sx={{ margin: '10px' }}>Submit</Button>
+      <Button variant="contained" onClick={handleSubmit} sx={{ margin: '4px' }}>Submit</Button>
       <Button variant="contained" onClick={() => setCurrentComponent(<MainTable />)}>Cancel</Button>      
       </Box>
     </Box>
