@@ -12,7 +12,19 @@ interface ShareImageProps {
   albums: AlbumResponse[];
 }
 
-export default function ShareImage({albums}: ShareImageProps) {
+const BG = "#524468";
+const CARD = 1000;
+const PAD = 54;
+const ART = 340;
+
+function formatDate(dateStr: string): [string, string] {
+  const d = new Date(dateStr);
+  const dd = String(d.getDate()).padStart(2, "0");
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  return [`${dd}.${mm}.`, String(d.getFullYear())];
+}
+
+export default function ShareImage({ albums }: ShareImageProps) {
   const imageRefs = useRef<HTMLDivElement[]>([]);
   const { setCurrentComponent } = useComponent();
 
@@ -28,104 +40,113 @@ export default function ShareImage({albums}: ShareImageProps) {
       const element = imageRefs.current[i];
       if (element) {
         try {
-          const dataUrl = await toPng(element);
-          zip.file(`album-${i}.png`, dataUrl.split('base64,')[1], { base64: true });
-        }
-        catch (error) {
+          const dataUrl = await toPng(element, { pixelRatio: 1 });
+          zip.file(`album-${i}.png`, dataUrl.split("base64,")[1], { base64: true });
+        } catch (error) {
           console.error(error);
         }
       }
     }
-
-    zip.generateAsync({ type: 'blob' })
-      .then((content) => {
-        saveAs(content, 'generated_images.zip');
-      });
+    zip.generateAsync({ type: "blob" }).then((content) => {
+      saveAs(content, "generated_images.zip");
+    });
   };
 
   return (
     <div>
-      <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', gap: 2 }}>
+      <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "center", gap: 2, mb: 2 }}>
         <Button variant="contained" onClick={handleDownload}>Download images</Button>
-        <Button variant="contained" onClick={() => setCurrentComponent(<MainTable/>)}>Cancel</Button>
+        <Button variant="contained" onClick={() => setCurrentComponent(<MainTable />)}>Cancel</Button>
       </Box>
-    {albums.map((album: AlbumResponse, index) => (
-      <div
-        style={{ margin: '10px' }}
-        id={`album-${album.id}`}
-        key={`album-${album.id}`}
-        ref={(el) => {
-          if (el) {
-        imageRefs.current[index] = el;
-          }
-        }}
-      >
-        <div
-          style={{
-            margin: 0,
-            padding: 0,
-            backgroundImage: `url(${BASE_URL}${album.image_url})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            fontFamily: "'Helvetica Neue', sans-serif",
-            color: 'white',
-            width: '1000px',
-            height: '1000px',
-            overflow: 'auto',
-            position: 'relative',
-          }}
-        >
+
+      {albums.map((album: AlbumResponse, index) => {
+        const [dateLine1, dateLine2] = formatDate(album.pub_date);
+        return (
           <div
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            }}
-          ></div>
-          <div
-            style={{
-              position: 'relative',
-              width: '1000px',
-              height: '1000px',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'left',
-              textAlign: 'left',
-              overflow: 'auto',
-            }}
+            style={{ margin: "10px", display: "inline-block" }}
+            id={`album-${album.id}`}
+            key={`album-${album.id}`}
+            ref={(el) => { if (el) imageRefs.current[index] = el; }}
           >
             <div
               style={{
-          fontSize: '36px',
-          fontWeight: 'bold',
-          marginBottom: '20px',
-          paddingLeft: '50px',
-          paddingRight: '50px',
+                position: "relative",
+                width: `${CARD}px`,
+                height: `${CARD}px`,
+                backgroundColor: BG,
+                fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                color: "#fff",
+                overflow: "hidden",
+                padding: `${PAD}px`,
+                boxSizing: "border-box",
+                textAlign: "left",
               }}
             >
-              {album.band_name} — {album.album_name}
-            </div>
-            <div
-              style={{
-                fontSize: '28px',
-                maxWidth: '90%',
-                textAlign: 'left',
-                lineHeight: 1.4,
-                paddingLeft: '50px',
-                paddingRight: '50px',
-                paddingBottom: '20px',
-                    }}
-            >
-              {stripHtmlTags(album.text)}
+              {/* Album art — absolute top-right */}
+              <img
+                src={`${BASE_URL}${album.image_url}`}
+                alt=""
+                style={{
+                  position: "absolute",
+                  top: `${PAD}px`,
+                  right: `${PAD}px`,
+                  width: `${ART}px`,
+                  height: `${ART}px`,
+                  objectFit: "cover",
+                  borderRadius: "16px",
+                }}
+              />
+
+              {/* Top section: header + title, constrained left of art, min-height matches art so review always starts below */}
+              <div style={{ marginRight: `${ART + 20}px`, minHeight: `${ART}px`, display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
+                {/* Date + app name row */}
+                <div style={{ display: "flex", alignItems: "flex-start", gap: "22px" }}>
+                  {/* Date — two lines, bold */}
+                  <div style={{ fontSize: "26px", fontWeight: 700, lineHeight: 1.2, letterSpacing: "-0.01em", flexShrink: 0 }}>
+                    <div>{dateLine1}</div>
+                    <div>{dateLine2}</div>
+                  </div>
+                  {/* App name — two lines, second line indented */}
+                  <div style={{ fontSize: "26px", fontWeight: 700, lineHeight: 1.2, letterSpacing: "0.01em" }}>
+                    <div>АЛЬБОМЫ</div>
+                    <div style={{ paddingLeft: "24px" }}>ПО ПЯТНИЦАМ</div>
+                  </div>
+                </div>
+
+                {/* Title */}
+                <div
+                  style={{
+                    marginTop: "36px",
+                    fontSize: "54px",
+                    fontWeight: 900,
+                    lineHeight: 1.0,
+                    letterSpacing: "-0.03em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  {album.band_name} — {album.album_name}
+                </div>
+              </div>
+
+              {/* Review text — always starts below art */}
+              <div
+                style={{
+                  marginTop: "36px",
+                  paddingLeft: "50px",
+                  fontSize: "26px",
+                  fontWeight: 400,
+                  lineHeight: 1.55,
+                  letterSpacing: "0.005em",
+                  overflow: "hidden",
+                  maxHeight: "360px",
+                }}
+              >
+                {stripHtmlTags(album.text)}
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-    ))}
-  </div>
+        );
+      })}
+    </div>
   );
 }
