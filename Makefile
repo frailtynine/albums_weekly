@@ -10,7 +10,8 @@ export
 DEFAUL_GOAL := help
 
 help:
-	@echo "run-dev          Start app in dev mode"
+	@echo "run_dev          Start app in dev mode"
+	@echo "init_frontend    Install frontend dependencies"
 	@echo "help             Show available commands"
 	@echo "load_data        Load test json fixtures"
 
@@ -32,6 +33,9 @@ load_data:
 reset_db:
 		cd $(PROJECT_DIR) && $(DJANGO_RUN) flush --no-input
 		cd $(PROJECT_DIR) && $(DJANGO_RUN) migrate
+
+init_frontend:
+		cd $(REACT_DIR) && npm install
 
 run_react:
 		cd $(REACT_DIR) && npm run dev
