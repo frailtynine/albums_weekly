@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Button, Box } from "@mui/material";
 import { AlbumResponse } from "../../interface";
 import JSZip from "jszip";
@@ -25,6 +25,53 @@ function reviewFontSize(charCount: number): string {
   return "19px"; // up to ~1400 chars
 }
 
+// Extract dominant color from an image URL via canvas, then darken it.
+// Returns an hsl() string safe for use as a dark background.
+function extractDominantColor(src: string): Promise<string> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onerror = () => resolve(BG);
+    img.onload = () => {
+      const SIZE = 20;
+      const canvas = document.createElement("canvas");
+      canvas.width = SIZE;
+      canvas.height = SIZE;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) { resolve(BG); return; }
+      ctx.drawImage(img, 0, 0, SIZE, SIZE);
+      const { data } = ctx.getImageData(0, 0, SIZE, SIZE);
+
+      // Bucket pixels (quantise to 32-step increments) and pick the most frequent
+      const buckets: Record<string, [number, number, number, number]> = {};
+      for (let i = 0; i < data.length; i += 4) {
+        const r = Math.round(data[i]     / 32) * 32;
+        const g = Math.round(data[i + 1] / 32) * 32;
+        const b = Math.round(data[i + 2] / 32) * 32;
+        const key = `${r},${g},${b}`;
+        if (!buckets[key]) buckets[key] = [r, g, b, 0];
+        buckets[key][3]++;
+      }
+      const [r, g, b] = Object.values(buckets).reduce((a, c) => (c[3] > a[3] ? c : a));
+
+      // Convert to HSL, keep hue, cap saturation, force low lightness for readability
+      const rn = r / 255, gn = g / 255, bn = b / 255;
+      const max = Math.max(rn, gn, bn), min = Math.min(rn, gn, bn);
+      const l = (max + min) / 2;
+      let h = 0, s = 0;
+      if (max !== min) {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        if (max === rn) h = ((gn - bn) / d + (gn < bn ? 6 : 0)) / 6;
+        else if (max === gn) h = ((bn - rn) / d + 2) / 6;
+        else h = ((rn - gn) / d + 4) / 6;
+      }
+      resolve(`hsl(${Math.round(h * 360)}, ${Math.round(Math.min(s * 100, 55))}%, 22%)`);
+    };
+    img.src = src;
+  });
+}
+
 function formatDate(dateStr: string): [string, string] {
   const d = new Date(dateStr);
   const dd = String(d.getDate()).padStart(2, "0");
@@ -35,6 +82,15 @@ function formatDate(dateStr: string): [string, string] {
 export default function ShareImage({ albums }: ShareImageProps) {
   const imageRefs = useRef<HTMLDivElement[]>([]);
   const { setCurrentComponent } = useComponent();
+  const [bgColors, setBgColors] = useState<Record<number, string>>({});
+
+  useEffect(() => {
+    albums.forEach((album) => {
+      extractDominantColor(`${BASE_URL}${album.image_url}`).then((color) =>
+        setBgColors((prev) => ({ ...prev, [album.id]: color }))
+      );
+    });
+  }, [albums]);
 
   const stripHtmlTags = (html: string): string => {
     const tmp = document.createElement("div");
@@ -81,7 +137,7 @@ export default function ShareImage({ albums }: ShareImageProps) {
                 position: "relative",
                 width: `${CARD}px`,
                 height: `${CARD}px`,
-                backgroundColor: BG,
+                backgroundColor: bgColors[album.id] ?? BG,
                 fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                 color: "#fff",
                 overflow: "hidden",
