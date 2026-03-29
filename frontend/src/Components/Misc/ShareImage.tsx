@@ -17,6 +17,14 @@ const CARD = 1000;
 const PAD = 54;
 const ART = 340;
 
+// Available review area: 516px tall, 842px wide.
+// Scale font down so longer texts still fit within the card.
+function reviewFontSize(charCount: number): string {
+  if (charCount <= 700)  return "26px";
+  if (charCount <= 1050) return "22px";
+  return "19px"; // up to ~1400 chars
+}
+
 function formatDate(dateStr: string): [string, string] {
   const d = new Date(dateStr);
   const dd = String(d.getDate()).padStart(2, "0");
@@ -128,17 +136,16 @@ export default function ShareImage({ albums }: ShareImageProps) {
                 </div>
               </div>
 
-              {/* Review text — always starts below art */}
+              {/* Review text — always starts below art, font scales with length */}
               <div
                 style={{
                   marginTop: "36px",
                   paddingLeft: "50px",
-                  fontSize: "26px",
+                  fontSize: reviewFontSize(stripHtmlTags(album.text).length),
                   fontWeight: 400,
                   lineHeight: 1.55,
                   letterSpacing: "0.005em",
                   overflow: "hidden",
-                  maxHeight: "360px",
                 }}
               >
                 {stripHtmlTags(album.text)}
