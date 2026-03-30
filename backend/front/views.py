@@ -1,12 +1,15 @@
 from itertools import chain
 
 from django.views.generic import DetailView, ListView, TemplateView
+from django.db.models import Prefetch
 
 from api.models import (
     Podcast,
     Album,
     Text,
     AlbumViewCount,
+    Post,
+    PostViewCount,
 )
 from front.utils import increase_counter
 
@@ -20,14 +23,21 @@ class IndexView(ListView):
     paginate_by = PAGINATE_INDEX
 
     def get_queryset(self):
-        albums = Album.objects.filter(is_published=True)
-        for album in albums:
-            increase_counter(album, AlbumViewCount)
+        posts = Post.objects.filter(is_published=True).prefetch_related(
+            Prefetch(
+                'albums',
+                queryset=Album.objects.order_by('index')
+            )
+        )
+        for post in posts:
+            increase_counter(post, PostViewCount)
+            for album in post.albums.all():
+                increase_counter(album, AlbumViewCount)
         podcasts = Podcast.objects.filter(is_published=True)
         texts = Text.objects.filter(is_published=True)
 
         combined_list = sorted(
-            chain(albums, podcasts, texts),
+            chain(posts, podcasts, texts),
             key=lambda instance: instance.pub_date,
             reverse=True
         )
