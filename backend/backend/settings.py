@@ -179,6 +179,7 @@ NINJA_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
 }
 CHROME_LOCATION = env('CHROME_LOCATION')
+MUSICAPI_KEY = env('MUSICAPI_KEY', default='')
 # TG_CHANNEL_TOKEN = (
 #     env('TG_CHANNEL_TOKEN') if not DEBUG else env('TG_TEST_CHANNEL_TOKEN')
 # )
