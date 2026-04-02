@@ -13,7 +13,11 @@ from api.schemas import (
     SonglinkResponse,
     AlbumCreateSchema,
 )
-from api.utils import get_songlink_data, compose_album_tg
+from api.utils import (
+    get_album_info_from_musicapi,
+    search_album_on_services,
+    compose_album_tg
+)
 
 logger = logging.getLogger(__name__)
 
@@ -23,8 +27,10 @@ class AlbumController:
 
     @route.post('/songlink', response=SonglinkResponse)
     def get_songlink(self, request, url: str):
-        songlink_data = get_songlink_data(url)
-        return songlink_data
+        info = get_album_info_from_musicapi(url)
+        return search_album_on_services(
+            info['band_name'], info['album_name'], url
+        )
 
     @route.post('/create', response={201: AlbumSchema})
     def create_album(self, request, item: AlbumCreateSchema):
@@ -64,5 +70,3 @@ class AlbumController:
         album = get_object_or_404(Album, pk=id)
         album.delete()
         return
-    
-
