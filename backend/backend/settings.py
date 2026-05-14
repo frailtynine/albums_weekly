@@ -92,9 +92,6 @@ else:
             'PORT': env.int('DB_PORT')
         }
     }
-
-
-
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
@@ -179,7 +176,6 @@ NINJA_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
 }
 CHROME_LOCATION = env('CHROME_LOCATION')
-MUSICAPI_KEY = env('MUSICAPI_KEY', default='')
 # TG_CHANNEL_TOKEN = (
 #     env('TG_CHANNEL_TOKEN') if not DEBUG else env('TG_TEST_CHANNEL_TOKEN')
 # )
@@ -192,3 +188,5 @@ TG_TEST_CHANNEL_TOKEN = (
 )
 
 SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
+
+MULTILINK_KEY = env('MULTILINK_KEY')

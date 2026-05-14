@@ -10,11 +10,17 @@
     >
   </div>
   <div class="col-12 col-md-8" style="padding-left: 1.25rem">
-    <a href="{% url 'album_detail' object.id %}" class="text-decoration-none text-reset"><h5 style="padding-bottom: 0.75rem">{{ object.band_name }} —  {{ object.album_name }} </h5></a>
+    {% if view_name == 'album_detail' %}
+      <h5 style="padding-bottom: 0.75rem">{{ object.band_name }} —  {{ object.album_name }}</h5>
+    {% else %}
+      <a href="{% url 'album_detail' object.id %}" class="text-decoration-none text-reset">
+        <h5 style="padding-bottom: 0.75rem">{{ object.band_name }} —  {{ object.album_name }}</h5>
+      </a>
+    {% endif %}
     {% if view_name != 'album_detail' and object.text|length > 1000 %}
-        {{ object.text|safe|truncatechars_html:1000 }}
+        {{ object.text|truncatechars_html:1000|safe }}
       {% else %}
-      <p>{{ object.text|safe }}</p>
+      {{ object.text|safe }}
       {% endif %}  
     <div class="row" style="margin-top: 0.25rem">
       <div class="col d-flex align-items-center">
