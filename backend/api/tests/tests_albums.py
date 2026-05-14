@@ -1,14 +1,45 @@
-import time
 from http import HTTPStatus
+from unittest.mock import Mock, patch
 
+from django.conf import settings
 from django.utils import timezone
 
 from api.models import Album, Post
 from api.tests.base import BaseApiTestCase
+from api.utils import get_album_multilink_data
 
 PUBLISHED_ALBUMS = 3
 ALL_ALBUMS = 5
 POSTS = 2
+MULTILINK_RESPONSE = {
+    'spotifyUrl': (
+        'https://open.spotify.com/album/0uSqVX1YenAjy2x8VRtpVq'
+        '?si=LZt2eQilS4yaZQSyZfym3g'
+    ),
+    'appleMusicUrl': (
+        'https://music.apple.com/ru/album/'
+        '%D0%BC%D0%B8%D0%BA%D1%82%D0%BB%D0%B0%D0%BD/6766955110'
+    ),
+    'deezerUrl': 'https://www.deezer.com/album/972110281',
+    'tidalUrl': 'https://tidal.com/browse/album/520103944',
+    'imageUrl': (
+        'https://i.scdn.co/image/ab67616d00001e02c41d27e3d2d2fbab7220c750'
+    ),
+    'albumName': 'миктлан',
+    'artistName': 'миктлан',
+}
+MULTILINK_DATA = {
+    'url': MULTILINK_RESPONSE['spotifyUrl'],
+    'links': {
+        'spotify': {'url': MULTILINK_RESPONSE['spotifyUrl']},
+        'appleMusic': {'url': MULTILINK_RESPONSE['appleMusicUrl']},
+        'deezer': {'url': MULTILINK_RESPONSE['deezerUrl']},
+        'tidal': {'url': MULTILINK_RESPONSE['tidalUrl']},
+    },
+    'band_name': MULTILINK_RESPONSE['artistName'],
+    'album_name': MULTILINK_RESPONSE['albumName'],
+    'image_url': MULTILINK_RESPONSE['imageUrl'],
+}
 
 
 class AlbumApiTestCase(BaseApiTestCase):
@@ -65,23 +96,54 @@ class AlbumApiTestCase(BaseApiTestCase):
         )
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
-    def test_get_songlink_data(self):
-        response = self.client.post(
-            f'/api/albums/songlink?url={self.spotify_url}',
-            **self.headers
+    @patch('api.utils.requests.get')
+    def test_get_album_multilink_data(self, mock_get):
+        mock_get.return_value = Mock(status_code=HTTPStatus.OK)
+        mock_get.return_value.json.return_value = MULTILINK_RESPONSE
+
+        response = get_album_multilink_data(self.spotify_url)
+
+        self.assertEqual(response, MULTILINK_DATA)
+        mock_get.assert_called_once_with(
+            'https://albumsweekly.com/links/get_links',
+            params={'spotifyUrl': self.spotify_url},
+            headers={
+                'Accept': 'application/json',
+                'Authorization': settings.MULTILINK_KEY,
+            },
+            timeout=30,
         )
+
+    def test_get_songlink_data(self):
+        with patch(
+            'api.controllers.albums.get_album_multilink_data',
+            return_value=MULTILINK_DATA
+        ):
+            response = self.client.post(
+                f'/api/albums/songlink?url={self.spotify_url}',
+                **self.headers
+            )
         self.assertEqual(response.status_code, HTTPStatus.OK)
-        self.assertEqual(response.json()['album_name'], 'All good?')
-        time.sleep(10)
+        self.assertEqual(
+            response.json()['album_name'],
+            MULTILINK_DATA['album_name'],
+        )
 
     def test_create_album(self):
-        response = self.client.post(
-            f'/api/albums/songlink?url={self.spotify_url}',
-            **self.headers
-        ).json()
+        with patch(
+            'api.controllers.albums.get_album_multilink_data',
+            return_value=MULTILINK_DATA
+        ):
+            response = self.client.post(
+                f'/api/albums/songlink?url={self.spotify_url}',
+                **self.headers
+            ).json()
         new_album = {
             "text": "Sample text for album 6",
-            "spotify_url": "https://open.spotify.com/album/0t6tusoh1iWAYXmI4ER144?si=2fb14e7131b246b1",  # noqa
+            "spotify_url": (
+                'https://open.spotify.com/album/0t6tusoh1iWAYXmI4ER144'
+                '?si=2fb14e7131b246b1'
+            ),
             "url": response['url'],
             "image_url": response['image_url'],
             "band_name": response['band_name'],

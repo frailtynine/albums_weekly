@@ -14,8 +14,7 @@ from api.schemas import (
     AlbumCreateSchema,
 )
 from api.utils import (
-    get_album_info_from_musicapi,
-    search_album_on_services,
+    get_album_multilink_data,
     compose_album_tg
 )
 
@@ -27,10 +26,7 @@ class AlbumController:
 
     @route.post('/songlink', response=SonglinkResponse)
     def get_songlink(self, request, url: str):
-        info = get_album_info_from_musicapi(url)
-        return search_album_on_services(
-            info['band_name'], info['album_name'], url
-        )
+        return get_album_multilink_data(url)
 
     @route.post('/create', response={201: AlbumSchema})
     def create_album(self, request, item: AlbumCreateSchema):

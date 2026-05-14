@@ -7,7 +7,7 @@ from django.core.management.base import BaseCommand
 from django.conf import settings
 
 from api.models import Post, Album, Podcast, Text
-from api.utils import get_album_info_from_musicapi, search_album_on_services
+from api.utils import get_album_multilink_data
 
 
 class Command(BaseCommand):
@@ -49,16 +49,15 @@ class Command(BaseCommand):
                 pk=album['post_id']
             )
 
-            info = get_album_info_from_musicapi(album['spotify_url'])
-            musicapi_data = search_album_on_services(info['band_name'], info['album_name'], album['spotify_url'])
+            multilink_data = get_album_multilink_data(album['spotify_url'])
             new_album = Album.objects.create(
                 text=album['text'],
                 spotify_url=album['spotify_url'],
-                url=musicapi_data['url'],
-                band_name=musicapi_data['band_name'],
-                album_name=musicapi_data['album_name'],
-                image_url=musicapi_data['image_url'],
-                links=musicapi_data['links'],
+                url=multilink_data['url'],
+                band_name=multilink_data['band_name'],
+                album_name=multilink_data['album_name'],
+                image_url=multilink_data['image_url'],
+                links=multilink_data['links'],
                 pub_date=datetime.strptime(
                     album['pub_date'],
                     '%Y-%m-%d'

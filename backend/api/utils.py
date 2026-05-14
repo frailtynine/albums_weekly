@@ -10,6 +10,8 @@ from api.models import Album
 
 LINK_NAMES = {
     'spotify': 'Spotify',
+    'tidal': 'Tidal',
+    'deezer': 'Deezer',
     'appleMusic': 'Apple Music',
     'yandex': 'Я.Музыка',
     'bandcamp': 'Bandcamp'
@@ -21,7 +23,8 @@ def compose_telegram(instance):
     result = ''
     for album in instance.albums.all().order_by('index'):
         title = (
-            f'<a href="https://albumsweekly.com/album/{album.id}">{album.band_name} — '
+            f'<a href="https://albumsweekly.com/album/{album.id}">'
+            f'{album.band_name} — '
             f'{album.album_name}</a>'
         )
         result += f'<p>{title}</p><p>{album.text}<br></p>'
@@ -105,112 +108,50 @@ def get_songlink_data(url):
     raise HttpResponseBadRequest('No spotify data found')
 
 
-# musicapi.com source identifiers for the services we care about
-_MUSICAPI_SOURCES = [
-    'spotify',
-    'yandexMusic',
-    'appleMusic',
-    'tidal',
-    'deezer',
-    'youtubeMusic'
-]
-
-# Map musicapi source names → internal link keys (matching LINK_NAMES above)
-_MUSICAPI_SOURCE_MAP = {
-    'spotify': 'spotify',
-    'yandexMusic': 'yandex',
-    'appleMusic': 'appleMusic',
-    'tidal': 'tidal',
-    'deezer': 'deezer',
-    'youtubeMusic': 'youtubeMusic',
-
+_MULTILINK_SOURCE_MAP = {
+    'spotifyUrl': 'spotify',
+    'appleMusicUrl': 'appleMusic',
+    'deezerUrl': 'deezer',
+    'tidalUrl': 'tidal',
 }
 
-_MUSICAPI_HEADERS = {
-    'Content-Type': 'application/json',
+_MULTILINK_HEADERS = {
     'Accept': 'application/json',
 }
 
 
-def _musicapi_headers():
+def _multilink_headers():
     return {
-        **_MUSICAPI_HEADERS,
-        'Authorization': f'Token {settings.MUSICAPI_KEY}'
+        **_MULTILINK_HEADERS,
+        'Authorization': settings.MULTILINK_KEY,
     }
 
 
-def get_album_info_from_musicapi(spotify_url: str) -> dict:
-    """Inspects a Spotify album URL via MusicAPI and returns band_name,
-    album_name and image_url.
-    """
-    response = requests.post(
-        'https://api.musicapi.com/public/inspect/url',
-        json={'url': spotify_url},
-        headers=_musicapi_headers(),
+def get_album_multilink_data(spotify_url: str) -> dict:
+    """Returns album metadata and streaming links for a Spotify album URL."""
+    response = requests.get(
+        'https://albumsweekly.com/links/get_links',
+        params={'spotifyUrl': spotify_url},
+        headers=_multilink_headers(),
+        timeout=30,
     )
     if not response or response.status_code != 200:
-        raise BadRequest('MusicAPI inspect request failed.')
+        raise BadRequest('Multilink request failed.')
+
     data = response.json()
-    if data.get('status') != 'success':
-        raise BadRequest('MusicAPI inspect returned a non-success status.')
-    item = data['data']
-    return {
-        'band_name': item['artistNames'][0] if item.get('artistNames') else '',
-        'album_name': item['name'],
-        'image_url': item.get('imageUrl', ''),
-    }
-
-
-def search_album_on_services(
-    band_name: str,
-    album_name: str,
-    spotify_url: str = ''
-) -> dict:
-    """Searches for an album on Spotify, Yandex Music, Apple Music, Tidal and
-    Deezer via MusicAPI. Returns the same schema as get_songlink_data.
-    """
-    response = requests.post(
-        'https://api.musicapi.com/public/search',
-        json={
-            'album': album_name,
-            'artist': band_name,
-            'type': 'album',
-            'sources': _MUSICAPI_SOURCES,
-        },
-        headers=_musicapi_headers(),
-    )
-    print(response.json())
-    if not response or response.status_code != 200:
-        raise BadRequest('MusicAPI search request failed.')
-
-    body = response.json()
-    # The API returns results under 'tracks' regardless of the requested type
-    results = body.get('tracks') or body.get('albums') or []
 
     links = {}
-    image_url = ''
-    main_url = spotify_url
-
-    for result in results:
-        if result.get('status') != 'success':
-            continue
-        source = result.get('source', '')
-        key = _MUSICAPI_SOURCE_MAP.get(source)
-        if not key:
-            continue
-        item = result.get('data', {})
-        links[key] = {'url': item.get('url', '')}
-        if source == 'spotify':
-            image_url = item.get('imageUrl', image_url)
-            if not main_url:
-                main_url = item.get('url', '')
+    for response_key, link_key in _MULTILINK_SOURCE_MAP.items():
+        link_url = data.get(response_key)
+        if link_url:
+            links[link_key] = {'url': link_url}
 
     return {
-        'url': main_url,
+        'url': data.get('spotifyUrl', spotify_url),
         'links': links,
-        'band_name': band_name,
-        'album_name': album_name,
-        'image_url': image_url,
+        'band_name': data.get('artistName', ''),
+        'album_name': data.get('albumName', ''),
+        'image_url': data.get('imageUrl', ''),
     }
 
 
