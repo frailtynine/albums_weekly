@@ -131,7 +131,7 @@ def get_album_multilink_data(spotify_url: str) -> dict:
     """Returns album metadata and streaming links for a Spotify album URL."""
     response = requests.get(
         'https://albumsweekly.com/links/get_links',
-        params={'spotifyUrl': spotify_url},
+        params={'url': spotify_url},
         headers=_multilink_headers(),
         timeout=30,
     )
