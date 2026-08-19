@@ -35,6 +35,7 @@
     "get-youtube-id": "^1.0.1",
     "html-to-image": "^1.11.11",
     "jszip": "^3.10.1",
+    "node-vibrant": "^4.0.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-froala-wysiwyg": "^4.3.0",
