@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { deleteEntity, EntityType, fetchDashboardData } from '../api/cmsApi';
 import { useCmsStore } from '../state/cmsStore';
 import DashboardItemCard, { DashboardCardItem } from '../components/DashboardItemCard';
-import { copyToClipboard, openSubstack } from '../lib/substack';
+import { copyToClipboard, openSubstack } from '../utils/substack';
 
 type DeleteTarget = { id: number; type: EntityType; title: string } | null;
 

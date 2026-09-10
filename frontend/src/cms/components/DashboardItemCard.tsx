@@ -12,7 +12,7 @@ import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import LaunchRoundedIcon from '@mui/icons-material/LaunchRounded';
 import { ReactNode } from 'react';
 import { EntityType } from '../api/cmsApi';
-import { formatDisplayDate } from '../lib/format';
+import { formatDisplayDate } from '../utils/format';
 
 export interface DashboardCardItem {
   id: number;
