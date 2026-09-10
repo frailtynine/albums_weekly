@@ -1,16 +1,13 @@
-import './App.css'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Login from './Components/Nav/Login';
-import ClippedDrawer from './Components/Nav/Drawer';
+import CmsApp from './cms/app/CmsApp';
 
 function App() {
   
   return (
     <Router>
-        <Routes>
-            <Route path="" element={<Login />} />
-            <Route path="/cms" element={<ClippedDrawer />} />
-        </Routes>
+      <Routes>
+        <Route path="/*" element={<CmsApp />} />
+      </Routes>
     </Router>
   )
 }

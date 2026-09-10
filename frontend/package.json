@@ -8,7 +8,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest run"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.1.0",
@@ -22,6 +23,7 @@
     "@mui/x-data-grid": "^7.22.1",
     "@mui/x-date-pickers": "^7.22.2",
     "@mui/x-tree-view": "^7.18.0",
+    "@tanstack/react-query": "^5.102.8",
     "@tiptap/extension-character-count": "^2.8.0",
     "@tiptap/extension-link": "^2.8.0",
     "@tiptap/extension-youtube": "^2.8.0",
@@ -39,13 +41,17 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-froala-wysiwyg": "^4.3.0",
-    "react-router-dom": "^6.26.1"
+    "react-router-dom": "^6.26.1",
+    "zustand": "^5.0.15"
   },
   "overrides": {
     "serialize-javascript": ">=7.0.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.7",
     "@types/file-saver": "^2.0.7",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
@@ -54,8 +60,10 @@
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.9",
     "globals": "^15.9.0",
+    "jsdom": "^29.1.1",
     "typescript": "^5.8.0",
     "typescript-eslint": "^8.0.1",
-    "vite": "^8.0.3"
+    "vite": "^8.0.3",
+    "vitest": "^4.1.11"
   }
 }
