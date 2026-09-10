@@ -1,5 +1,5 @@
-# Use the official Node.js image as the base image
-FROM node:20
+# Use a Node version compatible with the current test toolchain
+FROM node:22
 
 # Set the working directory
 WORKDIR /app
@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install the dependencies
-RUN npm install
+RUN npm ci
 
 # Copy the rest of the application code to the working directory
 COPY . .
