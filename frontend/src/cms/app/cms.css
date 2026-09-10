@@ -1,0 +1,67 @@
+.cms-root {
+  width: 100vw;
+  min-height: calc(100vh - 4rem);
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  background:
+    radial-gradient(circle at top left, rgba(136, 247, 210, 0.12), transparent 28%),
+    radial-gradient(circle at top right, rgba(142, 165, 255, 0.18), transparent 30%),
+    #09111f;
+}
+
+.cms-shell {
+  min-height: 100vh;
+}
+
+.cms-appbar {
+  background: rgba(9, 17, 31, 0.72);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+}
+
+.cms-frame {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 24px;
+  padding: 24px;
+}
+
+.cms-sidebar {
+  position: sticky;
+  top: 96px;
+  min-height: calc(100vh - 128px);
+  padding: 24px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(10, 18, 32, 0.88);
+}
+
+.cms-main {
+  min-width: 0;
+}
+
+.cms-loader {
+  min-height: 60vh;
+  display: grid;
+  place-items: center;
+}
+
+.cms-editor .ProseMirror {
+  min-height: 220px;
+  outline: none;
+}
+
+.cms-editor .ProseMirror p {
+  margin: 0 0 12px;
+}
+
+.cms-editor .ProseMirror a {
+  color: #88f7d2;
+}
+
+@media (max-width: 899px) {
+  .cms-frame {
+    grid-template-columns: 1fr;
+    padding: 16px;
+  }
+}
