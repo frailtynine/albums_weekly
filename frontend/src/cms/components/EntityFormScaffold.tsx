@@ -1,6 +1,6 @@
 import { Box, Button, Card, Checkbox, Divider, FormControlLabel, Stack, TextField, Typography } from '@mui/material';
 import { ReactNode } from 'react';
-import { fromDateTimeLocalValue, toDateTimeLocalValue } from '../lib/format';
+import { fromDateTimeLocalValue, toDateTimeLocalValue } from '../utils/format';
 
 interface EntityFormScaffoldProps {
   title: string;

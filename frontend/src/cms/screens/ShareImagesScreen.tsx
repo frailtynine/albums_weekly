@@ -8,7 +8,7 @@ import { createRef, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AlbumResponse } from '../../interface';
 import { fetchPost, resolveImageUrl } from '../api/cmsApi';
-import { formatShareImageDate } from '../lib/format';
+import { formatShareImageDate } from '../utils/format';
 
 const fallbackBackground = '#524468';
 const cardSize = 1000;
